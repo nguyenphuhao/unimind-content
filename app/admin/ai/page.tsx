@@ -36,11 +36,21 @@ export default function AiWriterPage() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || `HTTP ${res.status}`);
+        throw new Error(
+          (data as { error?: string }).error ?? `HTTP ${res.status}`
+        );
       }
 
-      const data = await res.json();
-      setMdxOutput(data.mdx);
+      // Stream the text response
+      const reader = res.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No response stream");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        setMdxOutput((prev) => prev + decoder.decode(value, { stream: true }));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -55,7 +65,10 @@ export default function AiWriterPage() {
   }
 
   return (
-    <main className="min-h-screen px-6 py-12" style={{ background: "hsl(var(--background))" }}>
+    <main
+      className="min-h-screen px-6 py-12"
+      style={{ background: "hsl(var(--background))" }}
+    >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -73,7 +86,10 @@ export default function AiWriterPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="mb-8">
-          <div className="rounded-xl border p-6 space-y-5" style={{ background: "hsl(var(--card))" }}>
+          <div
+            className="rounded-xl border p-6 space-y-5"
+            style={{ background: "hsl(var(--card))" }}
+          >
             {/* Content Type */}
             <div>
               <label
@@ -85,7 +101,9 @@ export default function AiWriterPage() {
               <select
                 id="contentType"
                 value={contentType}
-                onChange={(e) => setContentType(e.target.value as ContentType)}
+                onChange={(e) =>
+                  setContentType(e.target.value as ContentType)
+                }
                 className="w-full rounded-lg border px-3 py-2 text-sm"
                 style={{
                   background: "hsl(var(--input))",
@@ -133,7 +151,7 @@ export default function AiWriterPage() {
                 color: "hsl(var(--primary-foreground))",
               }}
             >
-              {loading ? "Generating..." : "Generate MDX"}
+              {loading ? "Generating…" : "Generate MDX"}
             </button>
           </div>
         </form>
@@ -154,16 +172,30 @@ export default function AiWriterPage() {
 
         {/* Output */}
         {mdxOutput && (
-          <div className="rounded-xl border overflow-hidden" style={{ background: "hsl(var(--card))" }}>
+          <div
+            className="rounded-xl border overflow-hidden"
+            style={{ background: "hsl(var(--card))" }}
+          >
             <div
               className="flex items-center justify-between px-4 py-3 border-b"
               style={{ background: "hsl(var(--muted))" }}
             >
-              <span className="text-sm font-medium">Generated MDX</span>
+              <span className="text-sm font-medium">
+                Generated MDX
+                {loading && (
+                  <span
+                    className="ml-2 text-xs"
+                    style={{ color: "hsl(var(--muted-foreground))" }}
+                  >
+                    streaming…
+                  </span>
+                )}
+              </span>
               <div className="flex gap-2">
                 <button
                   onClick={handleCopy}
-                  className="text-sm px-3 py-1 rounded-md border transition-colors"
+                  disabled={loading}
+                  className="text-sm px-3 py-1 rounded-md border transition-colors disabled:opacity-50"
                   style={{
                     borderColor: "hsl(var(--border))",
                     color: "hsl(var(--foreground))",
