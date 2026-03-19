@@ -85,6 +85,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     slug: finalSlug,
     collection,
-    editorUrl: `/keystatic/collection/${collection}/item/${finalSlug}`,
+    editorUrl: `/adminx/collection/${collection}/item/${finalSlug}`,
   });
 }
