@@ -57,30 +57,92 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 2rem;
-      backdrop-filter: blur(14px) saturate(1.4);
-      background: rgba(248,247,252,.88);
-      border-bottom: 1px solid rgba(87,56,175,.14);
-      transition: box-shadow .3s;
+      padding: .85rem 2rem;
+      backdrop-filter: blur(20px) saturate(1.6);
+      background: rgba(248,247,252,.82);
+      border-bottom: 1px solid rgba(87,56,175,.10);
+      transition: box-shadow .3s, background .3s;
     }
-    nav.scrolled { box-shadow: var(--shadow-sm); }
+    nav.scrolled {
+      box-shadow: 0 4px 32px rgba(87,56,175,.10);
+      background: rgba(248,247,252,.96);
+    }
     .nav-logo {
       font-family: 'Fraunces', serif;
-      font-size: 1.4rem; font-weight: 600;
+      font-size: 1.35rem; font-weight: 600;
       color: var(--forest); text-decoration: none;
-      display: flex; align-items: center; gap: .5rem;
+      letter-spacing: -.01em;
     }
+
+    /* Floating pill container */
     .nav-links {
-      display: flex; list-style: none; gap: .25rem;
+      display: flex; list-style: none; gap: 0;
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(87,56,175,.12);
+      border-radius: 100px;
+      padding: .3rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 12px rgba(87,56,175,.07);
     }
     .nav-links a {
+      position: relative;
       color: var(--text-mid); text-decoration: none;
-      font-size: .88rem; font-weight: 500;
-      padding: .4rem .75rem; border-radius: 100px;
+      font-size: .82rem; font-weight: 500;
+      padding: .38rem .9rem; border-radius: 100px;
+      transition: color .22s;
+      white-space: nowrap;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute;
+      inset: 0; border-radius: 100px;
+      background: var(--mint-light);
+      opacity: 0; transition: opacity .22s;
+      z-index: -1;
+    }
+    .nav-links a:hover { color: var(--mint-deep); }
+    .nav-links a:hover::after { opacity: 1; }
+    .nav-links a.active {
+      color: var(--mint-deep); font-weight: 600;
+    }
+    .nav-links a.active::after { opacity: 1; }
+
+    /* Hamburger for mobile */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: .4rem;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--forest); border-radius: 2px;
+      transition: transform .25s, opacity .25s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile drawer */
+    .nav-mobile {
+      display: none; position: fixed;
+      top: 60px; left: 0; right: 0; z-index: 99;
+      background: rgba(248,247,252,.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(87,56,175,.12);
+      padding: 1rem 1.5rem 1.5rem;
+      flex-direction: column; gap: .25rem;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      color: var(--text-mid); text-decoration: none;
+      font-size: .95rem; font-weight: 500;
+      padding: .7rem 1rem; border-radius: var(--r-sm);
       transition: background .2s, color .2s;
     }
-    .nav-links a:hover { background: var(--mint-light); color: var(--mint-deep); }
-    @media (max-width: 700px) { .nav-links { display: none; } }
+    .nav-mobile a:hover { background: var(--mint-light); color: var(--mint-deep); }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
 
     /* ── BACK TO TOP ────────────────────────────────────────────── */
     .back-to-top {
@@ -583,6 +645,7 @@
       .cta-perks { flex-direction: column; align-items: center; gap: 1rem; }
       .mission-quote::before { display: none; }
       nav .nav-links { display: none; }
+      nav .nav-hamburger { display: flex; }
     }
   </style>
 </head>
@@ -592,15 +655,29 @@
 <!-- NAV -->
 <nav id="navbar">
   <a href="#" class="nav-logo">Unimind</a>
-  <ul class="nav-links">
-    <li><a href="#mission">Về chúng tôi</a></li>
-    <li><a href="#product">Dokifree</a></li>
-    <li><a href="#solution">Tính năng</a></li>
-    <li><a href="#audience">Đối tượng</a></li>
-    <li><a href="#join">Liên hệ</a></li>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#mission" data-nav>Về chúng tôi</a></li>
+    <li><a href="#product" data-nav>Dokifree</a></li>
+    <li><a href="#solution" data-nav>Tính năng</a></li>
+    <li><a href="#audience" data-nav>Đối tượng</a></li>
+    <li><a href="#join" data-nav>Liên hệ</a></li>
   </ul>
-  <a href="#join" class="nav-cta">Đăng ký sớm</a>
+  <div style="display:flex;align-items:center;gap:.75rem;">
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#join" class="nav-cta">Đăng ký sớm</a>
+  </div>
 </nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-mobile" id="navMobile">
+  <a href="#mission">Về chúng tôi</a>
+  <a href="#product">Dokifree</a>
+  <a href="#solution">Tính năng</a>
+  <a href="#audience">Đối tượng</a>
+  <a href="#join">Liên hệ</a>
+</div>
 
 <!-- BACK TO TOP -->
 <button class="back-to-top" id="backToTop" aria-label="Về đầu trang">
@@ -1018,6 +1095,34 @@
   backToTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // Hamburger toggle
+  const hamburger = document.getElementById('navHamburger');
+  const mobileNav = document.getElementById('navMobile');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+  });
+  mobileNav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+    });
+  });
+
+  // Active nav link on scroll
+  const navSections = ['mission','product','solution','audience','join'];
+  const navAnchors = document.querySelectorAll('[data-nav]');
+  const sectionEls = navSections.map(id => document.getElementById(id)).filter(Boolean);
+  const activateNav = (id) => {
+    navAnchors.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  };
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) activateNav(e.target.id); });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sectionEls.forEach(el => sectionObserver.observe(el));
 
   // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
