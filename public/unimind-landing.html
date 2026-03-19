@@ -56,12 +56,13 @@
     /* ── NAV ───────────────────────────────────────────────────── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .85rem 2rem;
+      display: flex; align-items: stretch; justify-content: space-between;
+      padding: 0 2rem;
       backdrop-filter: blur(20px) saturate(1.6);
       background: rgba(248,247,252,.82);
       border-bottom: 1px solid rgba(87,56,175,.10);
       transition: box-shadow .3s, background .3s;
+      min-height: 60px;
     }
     nav.scrolled {
       box-shadow: 0 4px 32px rgba(87,56,175,.10);
@@ -72,31 +73,33 @@
       font-size: 1.35rem; font-weight: 600;
       color: var(--forest); text-decoration: none;
       letter-spacing: -.01em;
+      display: flex; align-items: center;
     }
 
-    /* Nav links — no background, underline indicator */
+    /* Nav links — no background, full-width bottom border indicator */
     .nav-links {
-      display: flex; list-style: none; gap: 0;
+      display: flex; list-style: none; align-self: stretch;
     }
+    .nav-links li { display: flex; }
     .nav-links a {
-      position: relative;
+      position: relative; display: flex; align-items: center;
       color: var(--text-mid); text-decoration: none;
       font-size: 1rem; font-weight: 500;
-      padding: .5rem 1.1rem;
+      padding: 0 1.1rem;
       transition: color .25s;
       white-space: nowrap;
     }
     .nav-links a::after {
       content: ''; position: absolute;
-      bottom: 0; left: 1.1rem; right: 1.1rem;
-      height: 2px; border-radius: 2px;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
       background: var(--mint);
       transform: scaleX(0);
       transform-origin: center;
       transition: transform .3s cubic-bezier(.4,0,.2,1);
     }
     .nav-links a:hover { color: var(--mint-deep); }
-    .nav-links a:hover::after { transform: scaleX(.5); }
+    .nav-links a:hover::after { transform: scaleX(1); }
     .nav-links a.active { color: var(--mint-deep); font-weight: 600; }
     .nav-links a.active::after { transform: scaleX(1); }
 
@@ -656,7 +659,7 @@
     <li><a href="#audience" data-nav>Đối tượng</a></li>
     <li><a href="#join" data-nav>Liên hệ</a></li>
   </ul>
-  <div style="display:flex;align-items:center;gap:.75rem;">
+  <div style="display:flex;align-items:center;gap:.75rem;align-self:center;">
     <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -686,8 +689,8 @@
 
   <div class="hero-inner">
     <div>
-      <h1>Unimind — <em>Nơi sức khỏe</em> được kết nối</h1>
-      <p>Chúng tôi xây dựng các giải pháp số hóa chăm sóc sức khỏe, giúp người bệnh và gia đình sống an tâm hơn mỗi ngày. Sản phẩm đầu tiên: <strong>Dokifree</strong> — ứng dụng hỗ trợ người bệnh động kinh.</p>
+      <h1>Unimind, <em>nơi sức khỏe</em> được kết nối</h1>
+      <p>Chúng tôi xây dựng các giải pháp số hóa chăm sóc sức khỏe, giúp người bệnh và gia đình sống an tâm hơn mỗi ngày. Sản phẩm đầu tiên: <strong>Dokifree</strong>, ứng dụng hỗ trợ người bệnh động kinh.</p>
       <div class="hero-btns">
         <a href="#product" class="btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:.4rem"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>Khám phá Dokifree</a>
         <a href="#join" class="btn-secondary">Đăng ký sớm</a>
@@ -730,7 +733,7 @@
   <div class="container mission-inner">
     <div class="section-label reveal">Về Unimind</div>
     <blockquote class="mission-quote reveal reveal-delay-1">
-      Công nghệ không chỉ để tiện lợi — mà để mang lại sự <em>an tâm</em> cho người cần nhất.
+      Công nghệ không chỉ để tiện lợi. Chúng tôi xây dựng nó để mang lại sự <em>an tâm</em> cho người cần nhất.
     </blockquote>
     <p class="mission-body reveal reveal-delay-2">
       Unimind là công ty công nghệ y tế Việt Nam, tập trung phát triển các giải pháp số giúp <strong>người mắc bệnh mãn tính và gia đình</strong> quản lý sức khỏe chủ động, an toàn và đầy cảm thông.
@@ -763,7 +766,7 @@
     </div>
     <div class="product-card reveal reveal-delay-3">
       <h3>Ứng dụng hỗ trợ <em>người bệnh động kinh</em></h3>
-      <p>Dokifree giúp bạn và gia đình quản lý sức khỏe toàn diện — từ nhắc uống thuốc, theo dõi cơn bệnh đến cảnh báo khẩn cấp và trợ lý thông minh cá nhân hóa.</p>
+      <p>Dokifree giúp bạn và gia đình quản lý sức khỏe toàn diện: từ nhắc uống thuốc, theo dõi cơn bệnh đến cảnh báo khẩn cấp và trợ lý thông minh cá nhân hóa.</p>
       <div class="product-pills">
         <span class="product-pill"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Nhắc Uống Thuốc</span>
         <span class="product-pill"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Theo Dõi Cơn Bệnh</span>
@@ -779,7 +782,7 @@
   <div class="container">
     <div class="section-label reveal">Vấn đề thực tế</div>
     <h2 class="section-title reveal reveal-delay-1">Những thách thức hàng ngày</h2>
-    <p class="section-body reveal reveal-delay-2">Sống chung với bệnh động kinh đòi hỏi sự theo dõi liên tục — đây là những vấn đề thực tế mà Dokifree ra đời để giải quyết.</p>
+    <p class="section-body reveal reveal-delay-2">Sống chung với bệnh động kinh đòi hỏi sự theo dõi liên tục. Đây là những vấn đề thực tế mà Dokifree ra đời để giải quyết.</p>
     <div class="problem-grid">
       <div class="problem-card reveal reveal-delay-1">
         <div class="problem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></div>
