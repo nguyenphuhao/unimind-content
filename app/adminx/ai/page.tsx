@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ContentType = "blog" | "wiki" | "handbook" | "landing";
 type Language = "en" | "vi";
@@ -30,11 +31,13 @@ const LANGUAGES: { value: Language; label: string }[] = [
 ];
 
 export default function AiWriterPage() {
+  const router = useRouter();
   const [contentType, setContentType] = useState<ContentType>("blog");
   const [model, setModel] = useState<AIModel>("gpt-5");
   const [language, setLanguage] = useState<Language>("en");
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [mdxOutput, setMdxOutput] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -77,6 +80,33 @@ export default function AiWriterPage() {
     }
   }
 
+  async function handleCreateInEditor() {
+    if (!prompt.trim()) return;
+    setCreating(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/ai/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contentType, prompt, model, language }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(
+          (data as { error?: string }).error ?? `HTTP ${res.status}`
+        );
+      }
+
+      const { editorUrl } = await res.json() as { editorUrl: string };
+      router.push(editorUrl);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      setCreating(false);
+    }
+  }
+
   async function handleCopy() {
     await navigator.clipboard.writeText(mdxOutput);
     setCopied(true);
@@ -104,8 +134,8 @@ export default function AiWriterPage() {
             AI Content Writer
           </h1>
           <p style={{ color: "hsl(var(--muted-foreground))" }}>
-            Generate structured MDX content with AI. Copy the output to paste
-            into Keystatic.
+            Generate structured MDX content with AI — preview it here or open
+            directly in the Keystatic editor.
           </p>
         </div>
 
@@ -117,7 +147,6 @@ export default function AiWriterPage() {
           >
             {/* Row 1: Model + Language */}
             <div className="grid grid-cols-2 gap-4">
-              {/* AI Model */}
               <div>
                 <label
                   className="block text-sm font-medium mb-2"
@@ -140,7 +169,6 @@ export default function AiWriterPage() {
                 </select>
               </div>
 
-              {/* Language */}
               <div>
                 <label
                   className="block text-sm font-medium mb-2"
@@ -175,9 +203,7 @@ export default function AiWriterPage() {
               <select
                 id="contentType"
                 value={contentType}
-                onChange={(e) =>
-                  setContentType(e.target.value as ContentType)
-                }
+                onChange={(e) => setContentType(e.target.value as ContentType)}
                 className="w-full rounded-lg border px-3 py-2 text-sm"
                 style={selectStyle}
               >
@@ -208,17 +234,34 @@ export default function AiWriterPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading || !prompt.trim()}
-              className="px-5 py-2 rounded-lg font-medium text-sm transition-opacity disabled:opacity-50"
-              style={{
-                background: "hsl(var(--primary))",
-                color: "hsl(var(--primary-foreground))",
-              }}
-            >
-              {loading ? "Generating…" : "Generate MDX"}
-            </button>
+            {/* Actions */}
+            <div className="flex gap-3 flex-wrap">
+              <button
+                type="submit"
+                disabled={loading || creating || !prompt.trim()}
+                className="px-5 py-2 rounded-lg font-medium text-sm transition-opacity disabled:opacity-50"
+                style={{
+                  background: "hsl(var(--muted))",
+                  color: "hsl(var(--foreground))",
+                  border: "1px solid hsl(var(--border))",
+                }}
+              >
+                {loading ? "Generating…" : "Preview MDX"}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCreateInEditor}
+                disabled={loading || creating || !prompt.trim()}
+                className="px-5 py-2 rounded-lg font-medium text-sm transition-opacity disabled:opacity-50"
+                style={{
+                  background: "hsl(var(--primary))",
+                  color: "hsl(var(--primary-foreground))",
+                }}
+              >
+                {creating ? "Creating…" : "✨ Generate & Open in Editor"}
+              </button>
+            </div>
           </div>
         </form>
 
@@ -236,7 +279,7 @@ export default function AiWriterPage() {
           </div>
         )}
 
-        {/* Output */}
+        {/* Output preview */}
         {mdxOutput && (
           <div
             className="rounded-xl border overflow-hidden"
