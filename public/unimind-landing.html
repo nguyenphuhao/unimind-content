@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UNIMIND – AI Hỗ Trợ Chăm Sóc Người Bệnh Động Kinh</title>
+  <title>Unimind – Công nghệ AI Chăm Sóc Sức Khỏe | Dokifree</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
   <style>
     /* ── RESET & BASE ──────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-size: 16px; }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Roboto', sans-serif;
       background: #F8F7FC;
       color: #1A1530;
       overflow-x: hidden;
@@ -374,6 +374,41 @@
     .audience-card h3 { margin-bottom: .5rem; }
     .audience-card p { font-size: .9rem; }
 
+    /* ── PRODUCT INTRO ─────────────────────────────────────────── */
+    .product { background: #fff; text-align: center; }
+    .product h2 em { color: var(--coral); }
+    .product-badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--mint-light); border: 1px solid rgba(87,56,175,.2);
+      border-radius: 100px; padding: .4rem 1.2rem;
+      color: var(--mint-deep); font-weight: 600; font-size: .85rem;
+      margin: 1rem 0 2rem;
+    }
+    .product-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); flex-shrink: 0; }
+    .product-card {
+      max-width: 780px; margin: 0 auto;
+      background: linear-gradient(135deg, var(--mint-pale) 0%, #EAE6F8 100%);
+      border: 1px solid rgba(87,56,175,.18); border-radius: var(--r-lg);
+      padding: 3rem 3.5rem; position: relative; overflow: hidden;
+    }
+    .product-card::after {
+      content: ''; position: absolute; bottom: -60px; right: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(87,56,175,.07); pointer-events: none;
+    }
+    .product-card h3 {
+      font-family: 'Fraunces', serif; font-size: clamp(1.6rem,3.5vw,2.2rem);
+      font-weight: 400; color: var(--forest); margin-bottom: 1rem;
+    }
+    .product-card h3 em { color: var(--mint-deep); font-style: italic; }
+    .product-card p { font-size: 1.05rem; max-width: 560px; margin: 0 auto 2rem; }
+    .product-pills { display: flex; justify-content: center; gap: .75rem; flex-wrap: wrap; }
+    .product-pill {
+      display: flex; align-items: center; gap: .4rem;
+      background: #fff; border: 1px solid rgba(87,56,175,.2); border-radius: 100px;
+      padding: .4rem .9rem; font-size: .82rem; color: var(--mint-deep); font-weight: 600;
+    }
+
     /* ── PRIVACY ───────────────────────────────────────────────── */
     .privacy { background: #fff; }
     .privacy-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
@@ -415,13 +450,13 @@
     }
     .cta-form input {
       flex: 1; background: transparent; border: none; outline: none;
-      color: #fff; font-size: .95rem; font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #fff; font-size: .95rem; font-family: 'Roboto', sans-serif;
     }
     .cta-form input::placeholder { color: rgba(255,255,255,.45); }
     .cta-form button {
       background: var(--coral); color: #fff; border: none; cursor: pointer;
       padding: .7rem 1.5rem; border-radius: 100px;
-      font-weight: 700; font-size: .9rem; font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: .9rem; font-family: 'Roboto', sans-serif;
       transition: background .2s, transform .2s;
       white-space: nowrap;
     }
@@ -498,7 +533,7 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#" class="nav-logo">UNI<span>MIND</span></a>
+  <a href="#" class="nav-logo">Uni<span>mind</span></a>
   <a href="#join" class="nav-cta">Đăng ký sớm</a>
 </nav>
 
@@ -512,13 +547,13 @@
     <div>
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
-        Đang phát triển · Sắp Ra Mắt
+        Công ty AI y tế · Việt Nam
       </div>
-      <h1>AI chăm sóc người bệnh <em>động kinh</em></h1>
-      <p>Ứng dụng thông minh giúp bạn và gia đình quản lý sức khỏe chủ động, an toàn và đầy cảm thông — mỗi ngày.</p>
+      <h1>Unimind — Công nghệ AI <em>vì sức khỏe</em> của bạn</h1>
+      <p>Chúng tôi xây dựng các giải pháp số hóa chăm sóc sức khỏe, giúp người bệnh và gia đình sống an tâm hơn mỗi ngày. Sản phẩm đầu tiên: <strong>Dokifree</strong> — ứng dụng hỗ trợ người bệnh động kinh.</p>
       <div class="hero-btns">
-        <a href="#join" class="btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:.4rem"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>Đăng Ký Sớm</a>
-        <a href="#solution" class="btn-secondary">Tìm hiểu thêm</a>
+        <a href="#product" class="btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:.4rem"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>Khám phá Dokifree</a>
+        <a href="#join" class="btn-secondary">Đăng ký sớm</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -527,7 +562,7 @@
           <div class="phone-header">
             <div class="phone-avatar">U</div>
             <div>
-              <div class="phone-name">UNIMIND</div>
+              <div class="phone-name">Dokifree</div>
               <div class="phone-sub">Hôm nay, 08:00</div>
             </div>
           </div>
@@ -556,12 +591,12 @@
 <!-- MISSION -->
 <section class="mission">
   <div class="container mission-inner">
-    <div class="section-label reveal">Sứ mệnh của chúng tôi</div>
+    <div class="section-label reveal">Về Unimind</div>
     <blockquote class="mission-quote reveal reveal-delay-1">
-      Bạn không đơn độc. Mỗi ngày, chúng tôi ở đây để giúp bạn an tâm hơn một chút.
+      Công nghệ không chỉ để tiện lợi — mà để mang lại sự <em>an tâm</em> cho người cần nhất.
     </blockquote>
     <p class="mission-body reveal reveal-delay-2">
-      Tại UNIMIND, chúng tôi đang xây dựng ứng dụng hỗ trợ <strong>người mắc bệnh động kinh và gia đình</strong> quản lý sức khỏe một cách chủ động, an toàn và đầy cảm thông.
+      Unimind là công ty công nghệ y tế Việt Nam, tập trung phát triển các giải pháp AI giúp <strong>người mắc bệnh mãn tính và gia đình</strong> quản lý sức khỏe chủ động, an toàn và đầy cảm thông.
     </p>
     <div class="mission-stats">
       <div class="stat reveal reveal-delay-1">
@@ -580,12 +615,34 @@
   </div>
 </section>
 
+<!-- PRODUCT INTRO -->
+<section class="product" id="product">
+  <div class="container">
+    <div class="section-label reveal" style="justify-content:center">Sản phẩm đầu tiên</div>
+    <h2 class="reveal reveal-delay-1">Giới thiệu <em>Dokifree</em></h2>
+    <div class="product-badge reveal reveal-delay-2">
+      <span class="product-badge-dot"></span>
+      Đang phát triển · Sắp Ra Mắt
+    </div>
+    <div class="product-card reveal reveal-delay-3">
+      <h3>Ứng dụng AI hỗ trợ <em>người bệnh động kinh</em></h3>
+      <p>Dokifree giúp bạn và gia đình quản lý sức khỏe toàn diện — từ nhắc uống thuốc, theo dõi cơn bệnh đến cảnh báo khẩn cấp và trợ lý AI cá nhân hóa.</p>
+      <div class="product-pills">
+        <span class="product-pill"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Nhắc Uống Thuốc</span>
+        <span class="product-pill"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>Theo Dõi Cơn Bệnh</span>
+        <span class="product-pill"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Cảnh Báo Khẩn Cấp</span>
+        <span class="product-pill"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="10" x="3" y="11" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>Trợ Lý AI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PROBLEM -->
 <section class="problem">
   <div class="container">
     <div class="section-label reveal">Vấn đề thực tế</div>
     <h2 class="section-title reveal reveal-delay-1">Những thách thức hàng ngày</h2>
-    <p class="section-body reveal reveal-delay-2">Sống chung với bệnh động kinh đòi hỏi sự theo dõi liên tục — nhưng các công cụ hiện tại chưa đáp ứng đủ nhu cầu.</p>
+    <p class="section-body reveal reveal-delay-2">Sống chung với bệnh động kinh đòi hỏi sự theo dõi liên tục — đây là những vấn đề thực tế mà Dokifree ra đời để giải quyết.</p>
     <div class="problem-grid">
       <div class="problem-card reveal reveal-delay-1">
         <div class="problem-icon"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></div>
@@ -622,9 +679,9 @@
 <!-- SOLUTION -->
 <section class="solution" id="solution">
   <div class="container">
-    <div class="section-label reveal">Giải pháp của chúng tôi</div>
+    <div class="section-label reveal">Tính năng của Dokifree</div>
     <h2 class="section-title reveal reveal-delay-1">Bốn tính năng cốt lõi</h2>
-    <p class="section-body reveal reveal-delay-2">Ứng dụng tích hợp AI với đầy đủ tính năng hỗ trợ người bệnh và gia đình chăm sóc sức khỏe toàn diện.</p>
+    <p class="section-body reveal reveal-delay-2">Dokifree tích hợp AI với đầy đủ tính năng hỗ trợ người bệnh và gia đình chăm sóc sức khỏe toàn diện.</p>
     <div class="solution-grid">
       <div class="feature-card reveal reveal-delay-1">
         <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
@@ -669,8 +726,8 @@
 <!-- STATUS -->
 <section class="status">
   <div class="container" style="text-align:center">
-    <div class="section-label reveal" style="justify-content:center">Trạng thái sản phẩm</div>
-    <h2 class="reveal reveal-delay-1">Đang trên đường ra mắt</h2>
+    <div class="section-label reveal" style="justify-content:center">Trạng thái Dokifree</div>
+    <h2 class="reveal reveal-delay-1">Dokifree đang trên đường ra mắt</h2>
     <div class="status-badge reveal reveal-delay-2">
       <span class="status-dot-animated"></span>
       Đang phát triển · Phiên bản đầu sắp ra mắt
@@ -713,7 +770,7 @@
 <section class="audience">
   <div class="container">
     <div class="section-label reveal">Dành cho ai?</div>
-    <h2 class="section-title reveal reveal-delay-1">UNIMIND phù hợp với bạn</h2>
+    <h2 class="section-title reveal reveal-delay-1">Dokifree phù hợp với bạn</h2>
     <div class="audience-grid">
       <div class="audience-card reveal reveal-delay-1">
         <div class="audience-emoji"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-1.7-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3.14z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 1.7-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3.14z"/></svg></div>
@@ -763,7 +820,7 @@
 <section class="cta-section" id="join">
   <div class="container">
     <div class="section-label reveal" style="justify-content:center;color:#C4B5F0">Đăng Ký Sớm</div>
-    <h2 class="reveal reveal-delay-1">Là người <em>đầu tiên</em><br>trải nghiệm UNIMIND</h2>
+    <h2 class="reveal reveal-delay-1">Là người <em>đầu tiên</em><br>trải nghiệm Dokifree</h2>
     <p class="reveal reveal-delay-2">Đăng ký để nhận thông báo ra mắt, tham gia thử nghiệm và gia nhập cộng đồng hỗ trợ.</p>
     <form class="cta-form reveal reveal-delay-3" onsubmit="handleSubmit(event)">
       <input type="email" placeholder="Nhập email của bạn..." required />
@@ -784,14 +841,14 @@
     <blockquote class="closing-quote reveal">
       "Mỗi ngày là một cơ hội mới để chăm sóc bản thân tốt hơn."
     </blockquote>
-    <p class="closing-sub reveal reveal-delay-1">UNIMIND ở đây để đồng hành cùng bạn.<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline-block;vertical-align:middle;margin-left:.4rem;color:var(--mint-deep)"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></p>
+    <p class="closing-sub reveal reveal-delay-1">Unimind ở đây để đồng hành cùng bạn.<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="display:inline-block;vertical-align:middle;margin-left:.4rem;color:var(--mint-deep)"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></p>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <a class="footer-logo" href="#">UNI<span>MIND</span></a>
-  <p>© 2025 UNIMIND. Làm với tâm huyết cho cộng đồng người bệnh động kinh.</p>
+  <a class="footer-logo" href="#">Uni<span>mind</span></a>
+  <p>© 2025 Unimind. Làm với tâm huyết cho cộng đồng người bệnh động kinh.</p>
 </footer>
 
 <script>
