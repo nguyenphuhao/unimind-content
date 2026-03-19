@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { getPosts } from "@/lib/content";
 
-export default async function BlogPage() {
-  const posts = await getPosts();
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ lang?: string }>;
+}) {
+  const { lang = "en" } = await searchParams;
+  const posts = await getPosts(lang);
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">

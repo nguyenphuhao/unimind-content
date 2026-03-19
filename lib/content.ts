@@ -17,9 +17,10 @@ function readMdxBody(filePath: string): string {
 
 // ---- Posts ----
 
-export async function getPosts() {
+export async function getPosts(locale: string = "en") {
   const posts = await reader.collections.posts.all();
-  return isDev ? posts : posts.filter((p) => p.entry.status === "published");
+  const visible = isDev ? posts : posts.filter((p) => p.entry.status === "published");
+  return visible.filter((p) => (p.entry.locale ?? "en") === locale);
 }
 
 export async function getPost(slug: string) {
@@ -32,11 +33,12 @@ export async function getPost(slug: string) {
 
 // ---- Wiki ----
 
-export async function getWikiArticles() {
+export async function getWikiArticles(locale: string = "en") {
   const articles = await reader.collections.wiki.all();
-  return isDev
+  const visible = isDev
     ? articles
     : articles.filter((a) => a.entry.status === "published");
+  return visible.filter((a) => (a.entry.locale ?? "en") === locale);
 }
 
 export async function getWikiArticle(slug: string) {
@@ -49,12 +51,14 @@ export async function getWikiArticle(slug: string) {
 
 // ---- Handbook ----
 
-export async function getHandbookEntries() {
+export async function getHandbookEntries(locale: string = "en") {
   const entries = await reader.collections.handbook.all();
   const visible = isDev
     ? entries
     : entries.filter((e) => e.entry.status === "published");
-  return visible.sort((a, b) => (a.entry.order ?? 0) - (b.entry.order ?? 0));
+  return visible
+    .filter((e) => (e.entry.locale ?? "en") === locale)
+    .sort((a, b) => (a.entry.order ?? 0) - (b.entry.order ?? 0));
 }
 
 export async function getHandbookEntry(slug: string) {
@@ -67,9 +71,10 @@ export async function getHandbookEntry(slug: string) {
 
 // ---- Pages ----
 
-export async function getPages() {
+export async function getPages(locale: string = "en") {
   const pages = await reader.collections.pages.all();
-  return isDev ? pages : pages.filter((p) => p.entry.status === "published");
+  const visible = isDev ? pages : pages.filter((p) => p.entry.status === "published");
+  return visible.filter((p) => (p.entry.locale ?? "en") === locale);
 }
 
 export async function getPage(slug: string) {

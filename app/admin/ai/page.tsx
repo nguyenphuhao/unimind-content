@@ -3,6 +3,12 @@
 import { useState } from "react";
 
 type ContentType = "blog" | "wiki" | "handbook" | "landing";
+type Language = "en" | "vi";
+type AIModel =
+  | "gpt-5"
+  | "gpt-4o"
+  | "claude-opus-4-6"
+  | "claude-sonnet-4-6";
 
 const CONTENT_TYPES: { value: ContentType; label: string }[] = [
   { value: "blog", label: "Blog Post" },
@@ -11,8 +17,22 @@ const CONTENT_TYPES: { value: ContentType; label: string }[] = [
   { value: "landing", label: "Landing Page" },
 ];
 
+const AI_MODELS: { value: AIModel; label: string; provider: string }[] = [
+  { value: "gpt-5", label: "ChatGPT 5", provider: "OpenAI" },
+  { value: "gpt-4o", label: "GPT-4o", provider: "OpenAI" },
+  { value: "claude-opus-4-6", label: "Claude Opus 4.6", provider: "Anthropic" },
+  { value: "claude-sonnet-4-6", label: "Claude Sonnet 4.6", provider: "Anthropic" },
+];
+
+const LANGUAGES: { value: Language; label: string }[] = [
+  { value: "en", label: "English" },
+  { value: "vi", label: "Tiếng Việt" },
+];
+
 export default function AiWriterPage() {
   const [contentType, setContentType] = useState<ContentType>("blog");
+  const [model, setModel] = useState<AIModel>("gpt-5");
+  const [language, setLanguage] = useState<Language>("en");
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [mdxOutput, setMdxOutput] = useState("");
@@ -31,7 +51,7 @@ export default function AiWriterPage() {
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contentType, prompt }),
+        body: JSON.stringify({ contentType, prompt, model, language }),
       });
 
       if (!res.ok) {
@@ -41,7 +61,6 @@ export default function AiWriterPage() {
         );
       }
 
-      // Stream the text response
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
       if (!reader) throw new Error("No response stream");
@@ -64,6 +83,12 @@ export default function AiWriterPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  const selectStyle = {
+    background: "hsl(var(--input))",
+    borderColor: "hsl(var(--border))",
+    color: "hsl(var(--foreground))",
+  };
+
   return (
     <main
       className="min-h-screen px-6 py-12"
@@ -79,8 +104,8 @@ export default function AiWriterPage() {
             AI Content Writer
           </h1>
           <p style={{ color: "hsl(var(--muted-foreground))" }}>
-            Generate structured MDX content with Claude. Copy the output to
-            paste into Keystatic.
+            Generate structured MDX content with AI. Copy the output to paste
+            into Keystatic.
           </p>
         </div>
 
@@ -90,6 +115,55 @@ export default function AiWriterPage() {
             className="rounded-xl border p-6 space-y-5"
             style={{ background: "hsl(var(--card))" }}
           >
+            {/* Row 1: Model + Language */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* AI Model */}
+              <div>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  htmlFor="model"
+                >
+                  AI Model
+                </label>
+                <select
+                  id="model"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value as AIModel)}
+                  className="w-full rounded-lg border px-3 py-2 text-sm"
+                  style={selectStyle}
+                >
+                  {AI_MODELS.map((m) => (
+                    <option key={m.value} value={m.value}>
+                      {m.label} ({m.provider})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Language */}
+              <div>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  htmlFor="language"
+                >
+                  Language
+                </label>
+                <select
+                  id="language"
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as Language)}
+                  className="w-full rounded-lg border px-3 py-2 text-sm"
+                  style={selectStyle}
+                >
+                  {LANGUAGES.map((l) => (
+                    <option key={l.value} value={l.value}>
+                      {l.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             {/* Content Type */}
             <div>
               <label
@@ -105,11 +179,7 @@ export default function AiWriterPage() {
                   setContentType(e.target.value as ContentType)
                 }
                 className="w-full rounded-lg border px-3 py-2 text-sm"
-                style={{
-                  background: "hsl(var(--input))",
-                  borderColor: "hsl(var(--border))",
-                  color: "hsl(var(--foreground))",
-                }}
+                style={selectStyle}
               >
                 {CONTENT_TYPES.map((ct) => (
                   <option key={ct.value} value={ct.value}>
@@ -134,11 +204,7 @@ export default function AiWriterPage() {
                 rows={4}
                 placeholder="Describe what you want to write about..."
                 className="w-full rounded-lg border px-3 py-2 text-sm resize-none"
-                style={{
-                  background: "hsl(var(--input))",
-                  borderColor: "hsl(var(--border))",
-                  color: "hsl(var(--foreground))",
-                }}
+                style={selectStyle}
               />
             </div>
 

@@ -1,5 +1,23 @@
 import { config, collection, fields } from "@keystatic/core";
 
+const localeField = fields.select({
+  label: "Language",
+  options: [
+    { label: "English", value: "en" },
+    { label: "Vietnamese (Tiếng Việt)", value: "vi" },
+  ],
+  defaultValue: "en",
+});
+
+const statusField = fields.select({
+  label: "Status",
+  options: [
+    { label: "Draft", value: "draft" },
+    { label: "Published", value: "published" },
+  ],
+  defaultValue: "draft",
+});
+
 export default config({
   storage: {
     kind: "local",
@@ -12,20 +30,14 @@ export default config({
       format: { contentField: "body" },
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
+        locale: localeField,
         date: fields.date({ label: "Date" }),
         author: fields.text({ label: "Author" }),
         tags: fields.array(fields.text({ label: "Tag" }), {
           label: "Tags",
           itemLabel: (props) => props.value,
         }),
-        status: fields.select({
-          label: "Status",
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-          defaultValue: "draft",
-        }),
+        status: statusField,
         coverImage: fields.image({
           label: "Cover Image",
           directory: "public/images/posts",
@@ -41,17 +53,11 @@ export default config({
       format: { contentField: "body" },
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
+        locale: localeField,
         date: fields.date({ label: "Date" }),
         author: fields.text({ label: "Author" }),
         category: fields.text({ label: "Category" }),
-        status: fields.select({
-          label: "Status",
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-          defaultValue: "draft",
-        }),
+        status: statusField,
         body: fields.mdx({ label: "Body" }),
       },
     }),
@@ -62,18 +68,12 @@ export default config({
       format: { contentField: "body" },
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
+        locale: localeField,
         date: fields.date({ label: "Date" }),
         author: fields.text({ label: "Author" }),
         section: fields.text({ label: "Section" }),
         order: fields.integer({ label: "Order", defaultValue: 0 }),
-        status: fields.select({
-          label: "Status",
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-          defaultValue: "draft",
-        }),
+        status: statusField,
         body: fields.mdx({ label: "Body" }),
       },
     }),
@@ -84,15 +84,9 @@ export default config({
       format: { contentField: "body" },
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
+        locale: localeField,
         description: fields.text({ label: "Description", multiline: true }),
-        status: fields.select({
-          label: "Status",
-          options: [
-            { label: "Draft", value: "draft" },
-            { label: "Published", value: "published" },
-          ],
-          defaultValue: "draft",
-        }),
+        status: statusField,
         body: fields.mdx({ label: "Body" }),
       },
     }),
