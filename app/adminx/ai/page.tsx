@@ -313,7 +313,7 @@ export default function AiWriterPage() {
                   {copied ? "Copied!" : "Copy"}
                 </button>
                 <a
-                  href="/adminx"
+                  href="/keystatic"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm px-3 py-1 rounded-md transition-opacity"
