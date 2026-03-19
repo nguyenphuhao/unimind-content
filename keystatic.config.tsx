@@ -1,4 +1,5 @@
 import { config, collection, fields } from "@keystatic/core";
+import { wrapper, block } from "@keystatic/core/content-components";
 
 const localeField = fields.select({
   label: "Language",
@@ -17,6 +18,74 @@ const statusField = fields.select({
   ],
   defaultValue: "draft",
 });
+
+const CALLOUT_COLORS: Record<string, string> = {
+  info: "#3b82f6",
+  warning: "#f59e0b",
+  success: "#10b981",
+  error: "#ef4444",
+};
+
+const mdxComponents = {
+  Callout: wrapper({
+    label: "Callout",
+    schema: {
+      type: fields.select({
+        label: "Type",
+        options: [
+          { label: "Info", value: "info" },
+          { label: "Warning", value: "warning" },
+          { label: "Success", value: "success" },
+          { label: "Error", value: "error" },
+        ],
+        defaultValue: "info",
+      }),
+    },
+    ContentView({ value, children }) {
+      const color = CALLOUT_COLORS[value.type] ?? CALLOUT_COLORS.info;
+      return (
+        <div
+          style={{
+            borderLeft: `4px solid ${color}`,
+            background: `${color}18`,
+            borderRadius: "0.375rem",
+            padding: "0.75rem 1rem",
+            marginBlock: "1rem",
+          }}
+        >
+          {children}
+        </div>
+      );
+    },
+  }),
+  Card: wrapper({
+    label: "Card",
+    schema: {
+      title: fields.text({ label: "Title" }),
+    },
+    ContentView({ value, children }) {
+      return (
+        <div
+          style={{
+            border: "1px solid #e5e7eb",
+            borderRadius: "0.5rem",
+            padding: "1.25rem",
+            marginBlock: "1rem",
+          }}
+        >
+          {value.title && (
+            <strong style={{ display: "block", marginBottom: "0.5rem" }}>
+              {value.title}
+            </strong>
+          )}
+          {children}
+        </div>
+      );
+    },
+  }),
+};
+
+const bodyField = fields.mdx({ label: "Body", components: mdxComponents });
 
 export default config({
   storage: {
@@ -46,7 +115,7 @@ export default config({
           directory: "public/images/posts",
           publicPath: "/images/posts",
         }),
-        body: fields.mdx({ label: "Body" }),
+        body: bodyField,
       },
     }),
     wiki: collection({
@@ -61,7 +130,7 @@ export default config({
         author: fields.text({ label: "Author" }),
         category: fields.text({ label: "Category" }),
         status: statusField,
-        body: fields.mdx({ label: "Body" }),
+        body: bodyField,
       },
     }),
     handbook: collection({
@@ -77,7 +146,7 @@ export default config({
         section: fields.text({ label: "Section" }),
         order: fields.integer({ label: "Order", defaultValue: 0 }),
         status: statusField,
-        body: fields.mdx({ label: "Body" }),
+        body: bodyField,
       },
     }),
     pages: collection({
@@ -90,7 +159,7 @@ export default config({
         locale: localeField,
         description: fields.text({ label: "Description", multiline: true }),
         status: statusField,
-        body: fields.mdx({ label: "Body" }),
+        body: bodyField,
       },
     }),
   },
