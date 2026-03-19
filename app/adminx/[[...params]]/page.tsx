@@ -1,12 +1,7 @@
-import { redirect } from "next/navigation";
+"use client";
+import { makePage } from "@keystatic/next/ui/app";
+import keystaticConfig from "@/keystatic.config";
 
-// Keystatic is hardcoded to use /keystatic as its base path.
-// This redirect keeps any bookmarked /adminx links working.
-export default function AdminxRedirect({
-  params,
-}: {
-  params: { params?: string[] };
-}) {
-  const rest = params.params?.join("/") ?? "";
-  redirect(rest ? `/keystatic/${rest}` : "/keystatic");
-}
+// Keystatic's JS hardcodes /keystatic in all router.push() calls.
+// We serve the studio at both /adminx (entry point) and /keystatic (internal navigation).
+export default makePage(keystaticConfig);
