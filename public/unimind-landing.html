@@ -70,6 +70,32 @@
       color: var(--forest); text-decoration: none;
       display: flex; align-items: center; gap: .5rem;
     }
+    .nav-links {
+      display: flex; list-style: none; gap: .25rem;
+    }
+    .nav-links a {
+      color: var(--text-mid); text-decoration: none;
+      font-size: .88rem; font-weight: 500;
+      padding: .4rem .75rem; border-radius: 100px;
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover { background: var(--mint-light); color: var(--mint-deep); }
+    @media (max-width: 700px) { .nav-links { display: none; } }
+
+    /* ── BACK TO TOP ────────────────────────────────────────────── */
+    .back-to-top {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 99;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--mint); color: #fff; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(87,56,175,.35);
+      opacity: 0; transform: translateY(12px);
+      transition: opacity .3s, transform .3s, background .2s;
+      pointer-events: none;
+    }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .back-to-top:hover { background: var(--mint-mid); }
+
     .nav-cta {
       background: var(--coral); color: #fff;
       padding: .55rem 1.4rem; border-radius: 100px;
@@ -566,8 +592,20 @@
 <!-- NAV -->
 <nav id="navbar">
   <a href="#" class="nav-logo">Unimind</a>
+  <ul class="nav-links">
+    <li><a href="#mission">Về chúng tôi</a></li>
+    <li><a href="#product">Dokifree</a></li>
+    <li><a href="#solution">Tính năng</a></li>
+    <li><a href="#audience">Đối tượng</a></li>
+    <li><a href="#join">Liên hệ</a></li>
+  </ul>
   <a href="#join" class="nav-cta">Đăng ký sớm</a>
 </nav>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" aria-label="Về đầu trang">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+</button>
 
 <!-- HERO -->
 <section class="hero">
@@ -617,7 +655,7 @@
 </section>
 
 <!-- MISSION -->
-<section class="mission">
+<section class="mission" id="mission">
   <div class="container mission-inner">
     <div class="section-label reveal">Về Unimind</div>
     <blockquote class="mission-quote reveal reveal-delay-1">
@@ -795,7 +833,7 @@
 </section>
 
 <!-- AUDIENCE -->
-<section class="audience">
+<section class="audience" id="audience">
   <div class="container">
     <div class="section-label reveal">Dành cho ai?</div>
     <h2 class="section-title reveal reveal-delay-1">Dokifree phù hợp với bạn</h2>
@@ -968,10 +1006,17 @@
 </footer>
 
 <script>
-  // Navbar scroll effect
+  // Navbar scroll effect + back to top visibility
   const navbar = document.getElementById('navbar');
+  const backToTop = document.getElementById('backToTop');
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 40);
+    backToTop.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // Back to top click
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   // Scroll reveal
