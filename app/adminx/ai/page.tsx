@@ -284,7 +284,7 @@ export default function AiWriterPage() {
               </div>
             </div>
             <pre
-              className="p-4 text-sm overflow-x-auto whitespace-pre-wrap"
+              className="p-4 text-sm overflow-x-auto overflow-y-auto whitespace-pre-wrap max-h-[600px]"
               style={{ color: "hsl(var(--foreground))" }}
             >
               {mdxOutput}
