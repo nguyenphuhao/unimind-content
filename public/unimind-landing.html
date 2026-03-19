@@ -486,15 +486,48 @@
 
     /* ── FOOTER ────────────────────────────────────────────────── */
     footer {
-      background: var(--forest); color: rgba(255,255,255,.5);
-      padding: 2.5rem 2rem; text-align: center;
+      background: var(--forest); color: rgba(255,255,255,.55);
+      padding: 5rem 2rem 2.5rem;
     }
-    .footer-logo {
-      font-family: 'Fraunces', serif; font-size: 1.3rem;
-      color: rgba(255,255,255,.9); margin-bottom: .5rem; display: block;
+    .footer-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 3rem;
     }
-    .footer-logo span { color: var(--mint); }
-    footer p { font-size: .85rem; }
+    @media (max-width: 900px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+    @media (max-width: 560px) {
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+    .footer-brand .footer-logo {
+      font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600;
+      color: #fff; text-decoration: none; display: block; margin-bottom: .75rem;
+    }
+    .footer-brand p { font-size: .88rem; line-height: 1.7; max-width: 280px; }
+    .footer-brand .footer-address {
+      margin-top: 1.25rem; font-size: .8rem; line-height: 1.8;
+      color: rgba(255,255,255,.45); border-left: 2px solid rgba(255,255,255,.12);
+      padding-left: .9rem;
+    }
+    .footer-col h4 {
+      font-family: 'Fraunces', serif; font-size: .82rem; font-weight: 600;
+      color: rgba(255,255,255,.45); letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 1.1rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+    .footer-col ul li { font-size: .88rem; color: rgba(255,255,255,.65); display: flex; align-items: flex-start; gap: .5rem; }
+    .footer-col ul li svg { flex-shrink: 0; margin-top: .18rem; }
+    .footer-values li { flex-direction: column !important; gap: .15rem !important; }
+    .footer-values li .val-title { color: rgba(255,255,255,.9); font-weight: 600; font-size: .85rem; }
+    .footer-values li .val-desc { color: rgba(255,255,255,.5); font-size: .8rem; }
+    .footer-bottom {
+      max-width: 1120px; margin: 3rem auto 0;
+      padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom p { font-size: .8rem; color: rgba(255,255,255,.35); }
+    .footer-mst { font-size: .78rem; color: rgba(255,255,255,.28); }
 
     /* ── SCROLL REVEAL ─────────────────────────────────────────── */
     .reveal {
@@ -842,8 +875,95 @@
 
 <!-- FOOTER -->
 <footer>
-  <a class="footer-logo" href="#">Unimind</a>
-  <p>© 2025 Unimind. Làm với tâm huyết cho cộng đồng người bệnh động kinh.</p>
+  <div class="footer-inner">
+
+    <!-- Brand column -->
+    <div class="footer-brand">
+      <a class="footer-logo" href="#">Unimind</a>
+      <p>Xây dựng các giải pháp công nghệ hiện đại nhằm nâng cao chất lượng cuộc sống và phát triển con người toàn diện.</p>
+      <div class="footer-address">
+        <div>Công ty TNHH Unimind Việt Nam</div>
+        <div>Tầng 17, Vincom Center, 72 Lê Thánh Tôn, TP.HCM</div>
+        <div>MST: 0319296295</div>
+        <div>GĐ: Mai Thị Bích Châu</div>
+      </div>
+    </div>
+
+    <!-- Sứ mệnh column -->
+    <div class="footer-col">
+      <h4>Sứ mệnh</h4>
+      <ul>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--mint)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          Ứng dụng công nghệ cải thiện sức khỏe
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--mint)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          Giải pháp thông minh, dễ tiếp cận
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--mint)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          Hỗ trợ cá nhân phát triển toàn diện
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--mint)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          Kết nối cộng đồng bền vững
+        </li>
+      </ul>
+    </div>
+
+    <!-- Giá trị cốt lõi column -->
+    <div class="footer-col">
+      <h4>Giá trị cốt lõi</h4>
+      <ul class="footer-values">
+        <li>
+          <span class="val-title">Human-Centered</span>
+          <span class="val-desc">Con người là trung tâm</span>
+        </li>
+        <li>
+          <span class="val-title">Innovation-Driven</span>
+          <span class="val-desc">Không ngừng đổi mới</span>
+        </li>
+        <li>
+          <span class="val-title">Trust &amp; Transparency</span>
+          <span class="val-desc">Minh bạch &amp; trách nhiệm</span>
+        </li>
+        <li>
+          <span class="val-title">Care &amp; Empathy</span>
+          <span class="val-desc">Thấu hiểu &amp; đồng hành</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Tầm nhìn column -->
+    <div class="footer-col">
+      <h4>Tầm nhìn</h4>
+      <ul>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--coral)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4l3 3"/></svg>
+          Sức khỏe &amp; wellness
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--coral)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4l3 3"/></svg>
+          AI hỗ trợ cá nhân
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--coral)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4l3 3"/></svg>
+          Giáo dục &amp; phát triển bản thân
+        </li>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--coral)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4l3 3"/></svg>
+          Trao quyền cho cá nhân
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Unimind. Làm với tâm huyết cho cộng đồng người bệnh.</p>
+    <span class="footer-mst">Sản phẩm đầu tiên: Dokifree</span>
+  </div>
 </footer>
 
 <script>
