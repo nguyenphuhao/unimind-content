@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.58",
-    "@ai-sdk/openai": "^3.0.41",
     "@keystatic/core": "^0.5.43",
     "@keystatic/next": "^5.0.1",
     "ai": "^6.0.116",

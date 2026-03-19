@@ -22,6 +22,9 @@ export default config({
   storage: {
     kind: "local",
   },
+  ui: {
+    brand: { name: "Unimind" },
+  },
   collections: {
     posts: collection({
       label: "Blog Posts",

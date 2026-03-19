@@ -1,7 +1,14 @@
-import { anthropic } from "@ai-sdk/anthropic";
-import { openai } from "@ai-sdk/openai";
-import { streamText, LanguageModel } from "ai";
+import { streamText } from "ai";
 import { NextRequest } from "next/server";
+
+// Gateway model IDs: "provider/model" — routed through Vercel AI Gateway
+// using AI_GATEWAY_API_KEY automatically
+const GATEWAY_MODELS: Record<string, string> = {
+  "gpt-5": "openai/gpt-5",
+  "gpt-4o": "openai/gpt-4o",
+  "claude-opus-4-6": "anthropic/claude-opus-4-6",
+  "claude-sonnet-4-6": "anthropic/claude-sonnet-4-6",
+};
 
 const LANGUAGE_LABELS: Record<string, string> = {
   en: "English",
@@ -46,14 +53,14 @@ The entire content (title, headings, body) must be written in ${langLabel}.
 Return valid MDX with frontmatter. Return ONLY the MDX content, no code blocks or extra text.`;
 }
 
-function getModel(modelId: string): LanguageModel {
-  if (modelId.startsWith("gpt-")) {
-    return openai(modelId);
-  }
-  return anthropic(modelId);
-}
-
 export async function POST(req: NextRequest) {
+  if (!process.env.AI_GATEWAY_API_KEY) {
+    return new Response(
+      JSON.stringify({ error: "AI_GATEWAY_API_KEY is not configured" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
   let contentType: string;
   let prompt: string;
   let model: string;
@@ -79,23 +86,10 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Check required API keys
-  const isOpenAI = model.startsWith("gpt-");
-  if (isOpenAI && !process.env.OPENAI_API_KEY) {
-    return new Response(
-      JSON.stringify({ error: "OPENAI_API_KEY is not configured" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-  }
-  if (!isOpenAI && !process.env.ANTHROPIC_API_KEY) {
-    return new Response(
-      JSON.stringify({ error: "ANTHROPIC_API_KEY is not configured" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
-  }
+  const gatewayModel = GATEWAY_MODELS[model] ?? "openai/gpt-5";
 
   const result = streamText({
-    model: getModel(model),
+    model: gatewayModel,
     system: SYSTEM_PROMPT,
     messages: [
       {
