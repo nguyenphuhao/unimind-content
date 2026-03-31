@@ -9,7 +9,6 @@ import { MobileNav } from "@/components/layout/mobile-nav";
 
 const navLinks = [
   { href: "/blog", label: "Blog" },
-  { href: "/wiki", label: "Wiki" },
   { href: "/handbook", label: "Handbook" },
 ];
 

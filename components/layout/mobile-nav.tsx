@@ -8,7 +8,6 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 
 const navLinks = [
   { href: "/blog", label: "Blog" },
-  { href: "/wiki", label: "Wiki" },
   { href: "/handbook", label: "Handbook" },
 ];
 

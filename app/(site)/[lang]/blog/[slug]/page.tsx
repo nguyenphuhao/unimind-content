@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPost, getPosts } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
-import { ArticleLayout } from "@/components/content/article-layout";
+import { DocsLayout } from "@/components/content/docs-layout";
 import { ArticleHeader } from "@/components/content/article-header";
 import { ArticleFooter } from "@/components/content/article-footer";
+import { extractHeadings } from "@/lib/headings";
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -45,15 +46,17 @@ export default async function BlogPostPage({
   const isDev = process.env.VERCEL_ENV !== "production";
   if (!isDev && post.status !== "published") notFound();
 
+  const headings = extractHeadings(post.body);
+
   return (
-    <ArticleLayout
+    <DocsLayout
+      headings={headings}
       header={
         <ArticleHeader
           title={post.title}
           date={post.date}
           author={post.author}
           tags={post.tags as string[] ?? undefined}
-          centered
         />
       }
       footer={
@@ -61,6 +64,6 @@ export default async function BlogPostPage({
       }
     >
       <MDXRemote source={post.body} components={mdxComponents} />
-    </ArticleLayout>
+    </DocsLayout>
   );
 }
