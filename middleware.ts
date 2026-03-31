@@ -6,8 +6,9 @@ const PUBLIC_FILE = /\.(.*)$/;
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip internal paths, API routes, static files, and admin routes
+  // Skip internal paths, API routes, static files, admin routes, and root
   if (
+    pathname === "/" ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/keystatic") ||
