@@ -11,7 +11,7 @@ interface DocsLayoutProps {
 export function DocsLayout({ header, children, footer, headings }: DocsLayoutProps) {
   return (
     <div className="py-6 md:py-10 px-4 sm:px-6">
-      <div className="mx-auto" style={{ maxWidth: "var(--content-wide)" }}>
+      <div className="mx-auto" style={{ maxWidth: "var(--content-max)" }}>
         <div className="lg:flex lg:gap-6">
           <article className="flex-1 min-w-0 md:bg-card md:rounded-xl md:p-8" style={{ boxShadow: "var(--shadow-sm)" }}>
             {header}

@@ -55,7 +55,7 @@ export function ArticleHeader({
           {section}
         </p>
       )}
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 leading-tight">
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 leading-tight font-display">
         {title}
       </h1>
       {(date || author) && (

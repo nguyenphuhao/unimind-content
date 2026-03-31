@@ -26,7 +26,7 @@ export default async function BlogPage({
 
   return (
     <div className="py-6 md:py-10 px-4 sm:px-6">
-      <div className="mx-auto" style={{ maxWidth: "var(--content-wide)" }}>
+      <div className="mx-auto" style={{ maxWidth: "var(--content-max)" }}>
         <h1 className="text-2xl md:text-3xl font-bold mb-2">Blog</h1>
         <p className="text-muted-foreground mb-8">Latest articles and updates</p>
         <ListFeed items={items} basePath={`/${lang}/blog`} emptyMessage="No posts published yet." />

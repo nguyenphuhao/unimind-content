@@ -65,7 +65,7 @@ export const mdxComponents: MDXComponents = {
   Callout,
   Card,
   h1: ({ children }) => (
-    <h1 className="text-3xl font-bold mt-8 mb-4">{children}</h1>
+    <h1 className="text-3xl font-bold mt-8 mb-4 font-display">{children}</h1>
   ),
   h2: ({ children }) => {
     const id = String(children)
@@ -73,7 +73,7 @@ export const mdxComponents: MDXComponents = {
       .replace(/[^\w\s-]/g, "")
       .replace(/\s+/g, "-");
     return (
-      <h2 id={id} className="text-2xl font-semibold mt-8 mb-3 scroll-mt-20">
+      <h2 id={id} className="text-2xl font-semibold mt-8 mb-3 scroll-mt-20 font-display">
         {children}
       </h2>
     );
@@ -84,7 +84,7 @@ export const mdxComponents: MDXComponents = {
       .replace(/[^\w\s-]/g, "")
       .replace(/\s+/g, "-");
     return (
-      <h3 id={id} className="text-xl font-semibold mt-6 mb-2 scroll-mt-20">
+      <h3 id={id} className="text-xl font-semibold mt-6 mb-2 scroll-mt-20 font-display">
         {children}
       </h3>
     );
