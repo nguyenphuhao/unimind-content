@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getHandbookEntry, getHandbookEntries } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
-import Link from "next/link";
+import { DocsLayout } from "@/components/content/docs-layout";
+import { ArticleHeader } from "@/components/content/article-header";
+import { ArticleFooter } from "@/components/content/article-footer";
+import { extractHeadings } from "@/lib/headings";
 
 export async function generateStaticParams() {
   const entries = await getHandbookEntries();
@@ -21,10 +24,7 @@ export async function generateMetadata({
   return {
     title: `${entry.title} — Unimind Handbook`,
     description: entry.body.slice(0, 160).replace(/[#*\n]/g, "").trim(),
-    openGraph: {
-      title: entry.title,
-      type: "article",
-    },
+    openGraph: { title: entry.title, type: "article" },
   };
 }
 
@@ -41,31 +41,15 @@ export default async function HandbookEntryPage({
   const isDev = process.env.VERCEL_ENV !== "production";
   if (!isDev && entry.status !== "published") notFound();
 
+  const headings = extractHeadings(entry.body);
+
   return (
-    <main className="max-w-3xl mx-auto px-6 py-12">
-      <Link
-        href={`/${lang}/handbook`}
-        className="text-sm mb-6 inline-block hover:underline"
-        style={{ color: "hsl(var(--primary))" }}
-      >
-        ← Back to Handbook
-      </Link>
-      <article>
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-3">{entry.title}</h1>
-          {entry.section && (
-            <p
-              className="text-sm"
-              style={{ color: "hsl(var(--muted-foreground))" }}
-            >
-              Section: {entry.section}
-            </p>
-          )}
-        </header>
-        <div className="prose max-w-none">
-          <MDXRemote source={entry.body} components={mdxComponents} />
-        </div>
-      </article>
-    </main>
+    <DocsLayout
+      headings={headings}
+      header={<ArticleHeader title={entry.title} section={entry.section} />}
+      footer={<ArticleFooter backHref={`/${lang}/handbook`} backLabel="Back to Handbook" />}
+    >
+      <MDXRemote source={entry.body} components={mdxComponents} />
+    </DocsLayout>
   );
 }

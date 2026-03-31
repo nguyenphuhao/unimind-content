@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getWikiArticle, getWikiArticles } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
-import Link from "next/link";
+import { DocsLayout } from "@/components/content/docs-layout";
+import { ArticleHeader } from "@/components/content/article-header";
+import { ArticleFooter } from "@/components/content/article-footer";
+import { extractHeadings } from "@/lib/headings";
 
 export async function generateStaticParams() {
   const articles = await getWikiArticles();
@@ -21,10 +24,7 @@ export async function generateMetadata({
   return {
     title: `${article.title} — Unimind Wiki`,
     description: article.body.slice(0, 160).replace(/[#*\n]/g, "").trim(),
-    openGraph: {
-      title: article.title,
-      type: "article",
-    },
+    openGraph: { title: article.title, type: "article" },
   };
 }
 
@@ -41,34 +41,15 @@ export default async function WikiArticlePage({
   const isDev = process.env.VERCEL_ENV !== "production";
   if (!isDev && article.status !== "published") notFound();
 
+  const headings = extractHeadings(article.body);
+
   return (
-    <main className="max-w-3xl mx-auto px-6 py-12">
-      <Link
-        href={`/${lang}/wiki`}
-        className="text-sm mb-6 inline-block hover:underline"
-        style={{ color: "hsl(var(--primary))" }}
-      >
-        ← Back to Wiki
-      </Link>
-      <article>
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-3">{article.title}</h1>
-          {article.category && (
-            <span
-              className="text-xs px-2 py-0.5 rounded-full"
-              style={{
-                background: "hsl(var(--secondary) / 0.15)",
-                color: "hsl(var(--secondary))",
-              }}
-            >
-              {article.category}
-            </span>
-          )}
-        </header>
-        <div className="prose max-w-none">
-          <MDXRemote source={article.body} components={mdxComponents} />
-        </div>
-      </article>
-    </main>
+    <DocsLayout
+      headings={headings}
+      header={<ArticleHeader title={article.title} category={article.category} />}
+      footer={<ArticleFooter backHref={`/${lang}/wiki`} backLabel="Back to Wiki" />}
+    >
+      <MDXRemote source={article.body} components={mdxComponents} />
+    </DocsLayout>
   );
 }
