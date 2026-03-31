@@ -67,12 +67,28 @@ export const mdxComponents: MDXComponents = {
   h1: ({ children }) => (
     <h1 className="text-3xl font-bold mt-8 mb-4">{children}</h1>
   ),
-  h2: ({ children }) => (
-    <h2 className="text-2xl font-semibold mt-6 mb-3">{children}</h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className="text-xl font-semibold mt-4 mb-2">{children}</h3>
-  ),
+  h2: ({ children }) => {
+    const id = String(children)
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-");
+    return (
+      <h2 id={id} className="text-2xl font-semibold mt-8 mb-3 scroll-mt-20">
+        {children}
+      </h2>
+    );
+  },
+  h3: ({ children }) => {
+    const id = String(children)
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-");
+    return (
+      <h3 id={id} className="text-xl font-semibold mt-6 mb-2 scroll-mt-20">
+        {children}
+      </h3>
+    );
+  },
   p: ({ children }) => <p className="mb-4 leading-relaxed">{children}</p>,
   ul: ({ children }) => (
     <ul className="list-disc list-inside mb-4 space-y-1">{children}</ul>
