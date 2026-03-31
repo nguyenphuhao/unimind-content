@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 :root {
   --background: var(--gray-6);
   --foreground: 0 0% 20%;
@@ -67,33 +65,36 @@
   --sidebar-accent-foreground: 260 47% 20%;
   --sidebar-border: 0 0% 87%;
   --sidebar-ring: 256 52% 45%;
-}
 
-.dark {
-  --background: 0 0% 10%;
-  --foreground: 0 0% 95%;
-  --card: 0 0% 15%;
-  --card-foreground: 0 0% 95%;
-  --popover: 0 0% 15%;
-  --popover-foreground: 0 0% 95%;
-  --primary: 256 52% 65%;
-  --primary-foreground: 0 0% 5%;
-  --secondary: 27 81% 62%;
-  --secondary-foreground: 0 0% 5%;
-  --muted: 0 0% 20%;
-  --muted-foreground: 0 0% 65%;
-  --accent: 233 40% 25%;
-  --accent-foreground: 233 88% 90%;
-  --destructive: 0 78% 55%;
-  --border: 0 0% 25%;
-  --input: 0 0% 20%;
-  --ring: 256 52% 65%;
-  --gray-1: 0 0% 95%;
-  --gray-2: 0 0% 80%;
-  --gray-3: 0 0% 60%;
-  --gray-4: 0 0% 40%;
-  --gray-5: 0 0% 25%;
-  --gray-6: 0 0% 15%;
+  /* Layout */
+  --content-width: 720px;
+  --content-wide: 1024px;
+  --content-max: 1280px;
+  --sidebar-width: 240px;
+  --header-height: 64px;
+
+  /* Radius — extend */
+  --radius-pill: 100px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Z-index */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-overlay: 30;
+  --z-modal: 40;
+  --z-toast: 50;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @theme inline {
@@ -155,4 +156,9 @@ body {
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 24px;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
