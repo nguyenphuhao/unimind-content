@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPost, getPosts } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
-import Link from "next/link";
+import { ArticleLayout } from "@/components/content/article-layout";
+import { ArticleHeader } from "@/components/content/article-header";
+import { ArticleFooter } from "@/components/content/article-footer";
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -44,44 +46,21 @@ export default async function BlogPostPage({
   if (!isDev && post.status !== "published") notFound();
 
   return (
-    <main className="max-w-3xl mx-auto px-6 py-12">
-      <Link
-        href={`/${lang}/blog`}
-        className="text-sm mb-6 inline-block hover:underline"
-        style={{ color: "hsl(var(--primary))" }}
-      >
-        ← Back to Blog
-      </Link>
-      <article>
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold mb-3">{post.title}</h1>
-          <p
-            className="text-sm"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            {post.date} · {post.author}
-          </p>
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex gap-2 mt-3 flex-wrap">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs px-2 py-0.5 rounded-full"
-                  style={{
-                    background: "hsl(var(--accent))",
-                    color: "hsl(var(--accent-foreground))",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </header>
-        <div className="prose max-w-none">
-          <MDXRemote source={post.body} components={mdxComponents} />
-        </div>
-      </article>
-    </main>
+    <ArticleLayout
+      header={
+        <ArticleHeader
+          title={post.title}
+          date={post.date}
+          author={post.author}
+          tags={post.tags as string[] ?? undefined}
+          centered
+        />
+      }
+      footer={
+        <ArticleFooter backHref={`/${lang}/blog`} backLabel="Back to Blog" />
+      }
+    >
+      <MDXRemote source={post.body} components={mdxComponents} />
+    </ArticleLayout>
   );
 }
