@@ -99,7 +99,7 @@
 
 @theme inline {
   --font-sans:
-    "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, "Roboto", sans-serif;
+    "Nunito", -apple-system, BlinkMacSystemFont, system-ui, "Roboto", sans-serif;
   --font-display:
     "Fraunces", Georgia, "Times New Roman", serif;
   --font-mono:
