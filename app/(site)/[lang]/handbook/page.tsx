@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getHandbookEntries } from "@/lib/content";
 
-export default async function HandbookPage() {
-  const entries = await getHandbookEntries();
+export const metadata: Metadata = {
+  title: "Handbook — Unimind",
+  description: "Team guidelines, processes, and best practices.",
+  openGraph: { title: "Unimind Handbook" },
+};
+
+export default async function HandbookPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const entries = await getHandbookEntries(lang);
 
   const grouped = entries.reduce(
     (acc, entry) => {
@@ -38,7 +50,7 @@ export default async function HandbookPage() {
               {items.map((entry) => (
                 <Link
                   key={entry.slug}
-                  href={`/handbook/${entry.slug}`}
+                  href={`/${lang}/handbook/${entry.slug}`}
                   className="block p-4 rounded-lg border hover:border-primary transition-colors"
                   style={{ background: "hsl(var(--card))" }}
                 >

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPage, getPages } from "@/lib/content";
@@ -8,10 +9,28 @@ export async function generateStaticParams() {
   return pages.map((p) => ({ slug: p.slug }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const page = await getPage(slug);
+  if (!page) return {};
+  return {
+    title: `${page.title} — Unimind`,
+    description: page.description || page.body.slice(0, 160).replace(/[#*\n]/g, "").trim(),
+    openGraph: {
+      title: page.title,
+      description: page.description || undefined,
+    },
+  };
+}
+
 export default async function LandingPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
   const { slug } = await params;
   const page = await getPage(slug);

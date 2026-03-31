@@ -1,12 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getPosts } from "@/lib/content";
 
+export const metadata: Metadata = {
+  title: "Blog — Unimind",
+  description: "Latest articles and updates from Unimind.",
+  openGraph: { title: "Unimind Blog" },
+};
+
 export default async function BlogPage({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<{ lang?: string }>;
+  params: Promise<{ lang: string }>;
 }) {
-  const { lang = "en" } = await searchParams;
+  const { lang } = await params;
   const posts = await getPosts(lang);
 
   return (
@@ -25,7 +32,7 @@ export default async function BlogPage({
           {posts.map((post) => (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={`/${lang}/blog/${post.slug}`}
               className="block p-6 rounded-lg border hover:border-primary transition-colors"
               style={{ background: "hsl(var(--card))" }}
             >

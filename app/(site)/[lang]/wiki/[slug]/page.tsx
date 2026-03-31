@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getWikiArticle, getWikiArticles } from "@/lib/content";
@@ -9,12 +10,30 @@ export async function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await getWikiArticle(slug);
+  if (!article) return {};
+  return {
+    title: `${article.title} — Unimind Wiki`,
+    description: article.body.slice(0, 160).replace(/[#*\n]/g, "").trim(),
+    openGraph: {
+      title: article.title,
+      type: "article",
+    },
+  };
+}
+
 export default async function WikiArticlePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { lang, slug } = await params;
   const article = await getWikiArticle(slug);
 
   if (!article) notFound();
@@ -25,7 +44,7 @@ export default async function WikiArticlePage({
   return (
     <main className="max-w-3xl mx-auto px-6 py-12">
       <Link
-        href="/wiki"
+        href={`/${lang}/wiki`}
         className="text-sm mb-6 inline-block hover:underline"
         style={{ color: "hsl(var(--primary))" }}
       >

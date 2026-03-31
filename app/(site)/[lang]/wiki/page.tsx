@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getWikiArticles } from "@/lib/content";
 
-export default async function WikiPage() {
-  const articles = await getWikiArticles();
+export const metadata: Metadata = {
+  title: "Wiki — Unimind",
+  description: "Reference documentation and knowledge base.",
+  openGraph: { title: "Unimind Wiki" },
+};
+
+export default async function WikiPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const articles = await getWikiArticles(lang);
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
@@ -20,7 +32,7 @@ export default async function WikiPage() {
           {articles.map((article) => (
             <Link
               key={article.slug}
-              href={`/wiki/${article.slug}`}
+              href={`/${lang}/wiki/${article.slug}`}
               className="block p-6 rounded-lg border hover:border-primary transition-colors"
               style={{ background: "hsl(var(--card))" }}
             >

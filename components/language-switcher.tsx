@@ -1,18 +1,18 @@
 "use client";
 
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { locales, type Locale } from "@/lib/i18n";
 
-function LanguageSwitcherInner() {
+export function LanguageSwitcher({ currentLang }: { currentLang: string }) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const current = searchParams.get("lang") ?? "en";
 
   function switchLang(lang: string) {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("lang", lang);
-    router.push(`${pathname}?${params.toString()}`);
+    const segments = pathname.split("/");
+    if (segments.length > 1 && locales.includes(segments[1] as Locale)) {
+      segments[1] = lang;
+    }
+    router.push(segments.join("/"));
   }
 
   return (
@@ -24,7 +24,7 @@ function LanguageSwitcherInner() {
         onClick={() => switchLang("en")}
         className="px-2 py-1 rounded-md transition-all"
         style={
-          current === "en"
+          currentLang === "en"
             ? { background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }
             : { color: "hsl(var(--muted-foreground))" }
         }
@@ -35,7 +35,7 @@ function LanguageSwitcherInner() {
         onClick={() => switchLang("vi")}
         className="px-2 py-1 rounded-md transition-all"
         style={
-          current === "vi"
+          currentLang === "vi"
             ? { background: "hsl(var(--primary))", color: "hsl(var(--primary-foreground))" }
             : { color: "hsl(var(--muted-foreground))" }
         }
@@ -43,13 +43,5 @@ function LanguageSwitcherInner() {
         VI
       </button>
     </div>
-  );
-}
-
-export function LanguageSwitcher() {
-  return (
-    <Suspense fallback={null}>
-      <LanguageSwitcherInner />
-    </Suspense>
   );
 }

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getHandbookEntry, getHandbookEntries } from "@/lib/content";
@@ -9,12 +10,30 @@ export async function generateStaticParams() {
   return entries.map((e) => ({ slug: e.slug }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const entry = await getHandbookEntry(slug);
+  if (!entry) return {};
+  return {
+    title: `${entry.title} — Unimind Handbook`,
+    description: entry.body.slice(0, 160).replace(/[#*\n]/g, "").trim(),
+    openGraph: {
+      title: entry.title,
+      type: "article",
+    },
+  };
+}
+
 export default async function HandbookEntryPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { lang, slug } = await params;
   const entry = await getHandbookEntry(slug);
 
   if (!entry) notFound();
@@ -25,7 +44,7 @@ export default async function HandbookEntryPage({
   return (
     <main className="max-w-3xl mx-auto px-6 py-12">
       <Link
-        href="/handbook"
+        href={`/${lang}/handbook`}
         className="text-sm mb-6 inline-block hover:underline"
         style={{ color: "hsl(var(--primary))" }}
       >

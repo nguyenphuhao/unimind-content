@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPost, getPosts } from "@/lib/content";
@@ -9,12 +10,32 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPost(slug);
+  if (!post) return {};
+  return {
+    title: `${post.title} — Unimind Blog`,
+    description: post.body.slice(0, 160).replace(/[#*\n]/g, "").trim(),
+    openGraph: {
+      title: post.title,
+      type: "article",
+      publishedTime: post.date ?? undefined,
+      authors: post.author ? [post.author] : undefined,
+    },
+  };
+}
+
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { lang, slug } = await params;
   const post = await getPost(slug);
 
   if (!post) notFound();
@@ -25,7 +46,7 @@ export default async function BlogPostPage({
   return (
     <main className="max-w-3xl mx-auto px-6 py-12">
       <Link
-        href="/blog"
+        href={`/${lang}/blog`}
         className="text-sm mb-6 inline-block hover:underline"
         style={{ color: "hsl(var(--primary))" }}
       >
