@@ -14,7 +14,9 @@ export function PreviewPanel({ previewUrl, refreshKey }: PreviewPanelProps) {
   useEffect(() => {
     if (iframeRef.current) {
       setLoading(true);
-      iframeRef.current.src = previewUrl;
+      // Append cache-busting param so browser actually reloads the iframe
+      const separator = previewUrl.includes("?") ? "&" : "?";
+      iframeRef.current.src = `${previewUrl}${separator}_t=${refreshKey}`;
     }
   }, [previewUrl, refreshKey]);
 
