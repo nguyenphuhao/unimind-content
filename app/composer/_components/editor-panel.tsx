@@ -40,12 +40,12 @@ export function EditorPanel({
     const crepe = new Crepe({
       root: editorRef.current,
       defaultValue: initialValue,
+      features: {
+        [CrepeFeature.Placeholder]: false,
+      },
       featureConfigs: {
         [CrepeFeature.ImageBlock]: {
           onUpload: (file: File) => uploadImage(file, collection),
-        },
-        [CrepeFeature.Placeholder]: {
-          text: "Start writing...",
         },
       },
     });
