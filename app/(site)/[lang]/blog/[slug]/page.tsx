@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { draftMode } from "next/headers";
 import { getPost, getPosts } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { DocsLayout } from "@/components/content/docs-layout";
@@ -43,8 +44,9 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
+  const dm = await draftMode();
   const isDev = process.env.VERCEL_ENV !== "production";
-  if (!isDev && post.status !== "published") notFound();
+  if (!isDev && !dm.isEnabled && post.status !== "published") notFound();
 
   const headings = extractHeadings(post.body);
 

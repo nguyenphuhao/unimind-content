@@ -1,5 +1,6 @@
 import { createReader } from "@keystatic/core/reader";
 import keystaticConfig from "@/keystatic.config";
+import { draftMode } from "next/headers";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
@@ -7,6 +8,16 @@ import matter from "gray-matter";
 export const reader = createReader(process.cwd(), keystaticConfig);
 
 const isDev = process.env.VERCEL_ENV !== "production";
+
+async function showDrafts(): Promise<boolean> {
+  if (isDev) return true;
+  try {
+    const dm = await draftMode();
+    return dm.isEnabled;
+  } catch {
+    return false;
+  }
+}
 
 // Read raw MDX body from a content file (after stripping frontmatter)
 function readMdxBody(filePath: string): string {
@@ -19,7 +30,8 @@ function readMdxBody(filePath: string): string {
 
 export async function getPosts(locale: string = "en") {
   const posts = await reader.collections.posts.all();
-  const visible = isDev ? posts : posts.filter((p) => p.entry.status === "published");
+  const drafts = await showDrafts();
+  const visible = drafts ? posts : posts.filter((p) => p.entry.status === "published");
   return visible.filter((p) => (p.entry.locale ?? "en") === locale);
 }
 
@@ -35,9 +47,8 @@ export async function getPost(slug: string) {
 
 export async function getWikiArticles(locale: string = "en") {
   const articles = await reader.collections.wiki.all();
-  const visible = isDev
-    ? articles
-    : articles.filter((a) => a.entry.status === "published");
+  const drafts = await showDrafts();
+  const visible = drafts ? articles : articles.filter((a) => a.entry.status === "published");
   return visible.filter((a) => (a.entry.locale ?? "en") === locale);
 }
 
@@ -53,9 +64,8 @@ export async function getWikiArticle(slug: string) {
 
 export async function getHandbookEntries(locale: string = "en") {
   const entries = await reader.collections.handbook.all();
-  const visible = isDev
-    ? entries
-    : entries.filter((e) => e.entry.status === "published");
+  const drafts = await showDrafts();
+  const visible = drafts ? entries : entries.filter((e) => e.entry.status === "published");
   return visible
     .filter((e) => (e.entry.locale ?? "en") === locale)
     .sort((a, b) => (a.entry.order ?? 0) - (b.entry.order ?? 0));
@@ -73,7 +83,8 @@ export async function getHandbookEntry(slug: string) {
 
 export async function getPages(locale: string = "en") {
   const pages = await reader.collections.pages.all();
-  const visible = isDev ? pages : pages.filter((p) => p.entry.status === "published");
+  const drafts = await showDrafts();
+  const visible = drafts ? pages : pages.filter((p) => p.entry.status === "published");
   return visible.filter((p) => (p.entry.locale ?? "en") === locale);
 }
 

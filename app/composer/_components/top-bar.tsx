@@ -8,9 +8,11 @@ interface TopBarProps {
   language: Language;
   showPreview: boolean;
   publishing: boolean;
+  saving: boolean;
   onContentTypeChange: (type: ContentType) => void;
   onLanguageChange: (lang: Language) => void;
   onTogglePreview: () => void;
+  onSaveDraft: () => void;
   onPublish: () => void;
   onBack: () => void;
 }
@@ -32,9 +34,11 @@ export function TopBar({
   language,
   showPreview,
   publishing,
+  saving,
   onContentTypeChange,
   onLanguageChange,
   onTogglePreview,
+  onSaveDraft,
   onPublish,
   onBack,
 }: TopBarProps) {
@@ -105,8 +109,19 @@ export function TopBar({
           Preview
         </button>
         <button
+          onClick={onSaveDraft}
+          disabled={saving || publishing}
+          className="px-4 py-1.5 rounded text-sm font-medium border disabled:opacity-50"
+          style={{
+            borderColor: "hsl(var(--border))",
+            color: "hsl(var(--foreground))",
+          }}
+        >
+          {saving ? "Saving..." : "Save Draft"}
+        </button>
+        <button
           onClick={onPublish}
-          disabled={publishing}
+          disabled={publishing || saving}
           className="px-4 py-1.5 rounded text-sm font-medium disabled:opacity-50"
           style={{
             background: "hsl(var(--primary))",

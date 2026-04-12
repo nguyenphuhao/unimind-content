@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { draftMode } from "next/headers";
 import { getHandbookEntry, getHandbookEntries } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { DocsLayout } from "@/components/content/docs-layout";
@@ -38,8 +39,9 @@ export default async function HandbookEntryPage({
 
   if (!entry) notFound();
 
+  const dm = await draftMode();
   const isDev = process.env.VERCEL_ENV !== "production";
-  if (!isDev && entry.status !== "published") notFound();
+  if (!isDev && !dm.isEnabled && entry.status !== "published") notFound();
 
   const headings = extractHeadings(entry.body);
 

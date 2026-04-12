@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { draftMode } from "next/headers";
 import { getPage, getPages } from "@/lib/content";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 
@@ -37,8 +38,9 @@ export default async function LandingPage({
 
   if (!page) notFound();
 
+  const dm = await draftMode();
   const isDev = process.env.VERCEL_ENV !== "production";
-  if (!isDev && page.status !== "published") notFound();
+  if (!isDev && !dm.isEnabled && page.status !== "published") notFound();
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">

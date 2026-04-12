@@ -122,6 +122,7 @@ export default function ComposerPage() {
   const [markdown, setMarkdown] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
 
@@ -235,20 +236,24 @@ export default function ComposerPage() {
     }
   }
 
-  async function handlePublish() {
+  function getSlug(): string {
+    return (
+      editingSlug ||
+      slugify(frontmatter.title) + (language === "vi" ? "-vi" : "")
+    );
+  }
+
+  async function handleSaveDraft() {
     if (!frontmatter.title.trim()) {
       alert("Title is required");
       return;
     }
 
-    setPublishing(true);
+    setSaving(true);
     try {
-      const slug =
-        editingSlug ||
-        slugify(frontmatter.title) +
-          (language === "vi" ? "-vi" : "");
-
-      const content = buildMdxContent(contentType, language, frontmatter, markdown);
+      const slug = getSlug();
+      const draftFm = { ...frontmatter, status: "draft" };
+      const content = buildMdxContent(contentType, language, draftFm, markdown);
 
       const res = await fetch("/api/composer/publish", {
         method: "POST",
@@ -267,6 +272,47 @@ export default function ComposerPage() {
       }
 
       setEditingSlug(slug);
+      setFrontmatter(draftFm);
+      alert("Draft saved and pushed!");
+    } catch (err) {
+      alert(
+        `Save failed: ${err instanceof Error ? err.message : "Unknown error"}`
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handlePublish() {
+    if (!frontmatter.title.trim()) {
+      alert("Title is required");
+      return;
+    }
+
+    setPublishing(true);
+    try {
+      const slug = getSlug();
+      const publishedFm = { ...frontmatter, status: "published" };
+      const content = buildMdxContent(contentType, language, publishedFm, markdown);
+
+      const res = await fetch("/api/composer/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug,
+          collection: contentType,
+          content,
+          title: frontmatter.title,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+
+      setEditingSlug(slug);
+      setFrontmatter(publishedFm);
       alert("Published successfully!");
     } catch (err) {
       alert(
@@ -295,9 +341,11 @@ export default function ComposerPage() {
         language={language}
         showPreview={showPreview}
         publishing={publishing}
+        saving={saving}
         onContentTypeChange={setContentType}
         onLanguageChange={setLanguage}
         onTogglePreview={handlePreview}
+        onSaveDraft={handleSaveDraft}
         onPublish={handlePublish}
         onBack={handleBack}
       />
