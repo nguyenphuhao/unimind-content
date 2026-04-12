@@ -16,6 +16,7 @@ interface ContentListProps {
   items: ContentItem[];
   loading: boolean;
   onSelect: (item: ContentItem) => void;
+  onDelete: (item: ContentItem) => void;
   onNew: () => void;
 }
 
@@ -53,7 +54,7 @@ const FILTER_LANGS: { value: FilterLang; label: string }[] = [
   { value: "vi", label: "VI" },
 ];
 
-export function ContentList({ items, loading, onSelect, onNew }: ContentListProps) {
+export function ContentList({ items, loading, onSelect, onDelete, onNew }: ContentListProps) {
   const [filterType, setFilterType] = useState<FilterType>("all");
   const [filterLang, setFilterLang] = useState<FilterLang>("all");
 
@@ -155,16 +156,18 @@ export function ContentList({ items, loading, onSelect, onNew }: ContentListProp
               const cColors = collectionColors[item.collectionLabel] || collectionColors.Blog;
               const lColors = localeColors[item.locale] || localeColors.en;
               return (
-                <button
+                <div
                   key={`${item.collection}-${item.slug}`}
-                  onClick={() => onSelect(item)}
-                  className="w-full text-left rounded-lg border p-4 transition-colors hover:border-gray-400 flex items-center gap-3"
+                  className="rounded-lg border p-4 transition-colors hover:border-gray-400 flex items-center gap-3"
                   style={{
                     background: "hsl(var(--card))",
                     borderColor: "hsl(var(--border))",
                   }}
                 >
-                  <div className="flex-1 min-w-0">
+                  <button
+                    onClick={() => onSelect(item)}
+                    className="flex-1 min-w-0 text-left"
+                  >
                     <p className="font-medium truncate">{item.title}</p>
                     <p
                       className="text-xs mt-1"
@@ -172,8 +175,8 @@ export function ContentList({ items, loading, onSelect, onNew }: ContentListProp
                     >
                       {item.date}
                     </p>
-                  </div>
-                  <div className="flex gap-2 shrink-0">
+                  </button>
+                  <div className="flex gap-2 shrink-0 items-center">
                     <span
                       className="px-2 py-0.5 rounded text-xs font-medium"
                       style={{ background: cColors.bg, color: cColors.text }}
@@ -192,8 +195,22 @@ export function ContentList({ items, loading, onSelect, onNew }: ContentListProp
                     >
                       {item.status}
                     </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(item);
+                      }}
+                      className="ml-1 px-2 py-0.5 rounded text-xs font-medium hover:opacity-80 transition-opacity"
+                      style={{
+                        background: "hsl(0 84% 60% / 0.1)",
+                        color: "hsl(0 84% 60%)",
+                      }}
+                      title="Delete"
+                    >
+                      Delete
+                    </button>
                   </div>
-                </button>
+                </div>
               );
             })}
           </div>

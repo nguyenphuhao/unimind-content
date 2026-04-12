@@ -250,6 +250,29 @@ export default function ComposerPage() {
     setView("editor");
   }
 
+  async function handleDelete(item: ContentItem) {
+    if (!confirm(`Delete "${item.title}"? This will commit and push the deletion.`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/composer/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: item.slug, collection: item.collection }),
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+
+      fetchList();
+    } catch (err) {
+      alert(`Delete failed: ${err instanceof Error ? err.message : "Unknown error"}`);
+    }
+  }
+
   function handleBack() {
     setView("list");
     fetchList();
@@ -388,6 +411,7 @@ export default function ComposerPage() {
         items={items}
         loading={listLoading}
         onSelect={handleSelect}
+        onDelete={handleDelete}
         onNew={handleNew}
       />
     );
