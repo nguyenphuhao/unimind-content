@@ -13,6 +13,7 @@ export function middleware(request: NextRequest) {
     pathname.startsWith("/api") ||
     pathname.startsWith("/keystatic") ||
     pathname.startsWith("/adminx") ||
+    pathname.startsWith("/composer") ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();
@@ -31,5 +32,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|api|keystatic|adminx|.*\\..*).*)"],
+  matcher: ["/((?!_next|api|keystatic|adminx|composer|.*\\..*).*)"],
 };
