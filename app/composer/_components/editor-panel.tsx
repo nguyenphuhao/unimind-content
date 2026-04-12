@@ -91,15 +91,27 @@ export function EditorPanel({
   }, []);
 
   return (
-    <div className="flex-1 overflow-auto" style={{ background: "hsl(var(--background))" }}>
+    <div className="flex-1 flex flex-col overflow-hidden" style={{ background: "hsl(var(--background))" }}>
       <div
-        ref={editorRef}
-        className="h-full p-4 prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-full"
+        className="text-xs font-medium uppercase tracking-wider px-4 py-1.5 border-b shrink-0"
         style={{
-          fontFamily: "'Nunito', sans-serif",
-          color: "hsl(var(--foreground))",
+          color: "hsl(var(--muted-foreground))",
+          background: "hsl(var(--muted))",
+          borderColor: "hsl(var(--border))",
         }}
-      />
+      >
+        Editor
+      </div>
+      <div className="flex-1 overflow-auto">
+        <div
+          ref={editorRef}
+          className="h-full p-4 prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-full"
+          style={{
+            fontFamily: "'Nunito', sans-serif",
+            color: "hsl(var(--foreground))",
+          }}
+        />
+      </div>
     </div>
   );
 }

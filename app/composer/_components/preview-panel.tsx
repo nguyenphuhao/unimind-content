@@ -107,17 +107,17 @@ export function PreviewPanel({ markdown }: PreviewPanelProps) {
       className="flex-1 flex flex-col border-l overflow-hidden"
       style={{ borderColor: "hsl(var(--border))" }}
     >
-      {loading && (
-        <div
-          className="text-xs px-3 py-1 shrink-0"
-          style={{
-            color: "hsl(var(--muted-foreground))",
-            background: "hsl(var(--muted))",
-          }}
-        >
-          Rendering...
-        </div>
-      )}
+      <div
+        className="text-xs font-medium uppercase tracking-wider px-4 py-1.5 border-b shrink-0 flex items-center justify-between"
+        style={{
+          color: "hsl(var(--muted-foreground))",
+          background: "hsl(var(--muted))",
+          borderColor: "hsl(var(--border))",
+        }}
+      >
+        <span>Preview</span>
+        {loading && <span className="opacity-60">Rendering...</span>}
+      </div>
       <div
         className="flex-1 overflow-auto p-6"
         style={{
