@@ -120,7 +120,8 @@ export default function ComposerPage() {
   const [language, setLanguage] = useState<Language>("en");
   const [frontmatter, setFrontmatter] = useState<FrontmatterData>(emptyFrontmatter());
   const [markdown, setMarkdown] = useState("");
-  const [showPreview, setShowPreview] = useState(true);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
 
@@ -190,6 +191,50 @@ export default function ComposerPage() {
     fetchList();
   }
 
+  async function handlePreview() {
+    if (showPreview) {
+      setShowPreview(false);
+      return;
+    }
+
+    if (!frontmatter.title.trim()) {
+      alert("Title is required to preview");
+      return;
+    }
+
+    const slug =
+      editingSlug ||
+      slugify(frontmatter.title) + (language === "vi" ? "-vi" : "");
+
+    const content = buildMdxContent(contentType, language, frontmatter, markdown);
+
+    try {
+      const res = await fetch("/api/composer/draft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug,
+          collection: contentType,
+          content,
+          language,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = (await res.json()) as { error?: string };
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+
+      const { previewUrl: url } = (await res.json()) as { previewUrl: string };
+      setPreviewUrl(url);
+      setShowPreview(true);
+    } catch (err) {
+      alert(
+        `Preview failed: ${err instanceof Error ? err.message : "Unknown error"}`
+      );
+    }
+  }
+
   async function handlePublish() {
     if (!frontmatter.title.trim()) {
       alert("Title is required");
@@ -252,7 +297,7 @@ export default function ComposerPage() {
         publishing={publishing}
         onContentTypeChange={setContentType}
         onLanguageChange={setLanguage}
-        onTogglePreview={() => setShowPreview((p) => !p)}
+        onTogglePreview={handlePreview}
         onPublish={handlePublish}
         onBack={handleBack}
       />
@@ -264,7 +309,7 @@ export default function ComposerPage() {
           collection={contentType}
           onChange={setMarkdown}
         />
-        {showPreview && <PreviewPanel markdown={markdown} />}
+        {showPreview && previewUrl && <PreviewPanel previewUrl={previewUrl} />}
       </div>
 
       <FrontmatterBar
