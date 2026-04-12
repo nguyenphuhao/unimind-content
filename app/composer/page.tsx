@@ -228,7 +228,7 @@ export default function ComposerPage() {
     setContentType("posts");
     setLanguage("en");
     setFrontmatter(emptyFrontmatter());
-    setMarkdown("");
+    setMarkdown("# \n");
     setEditorKey((k) => k + 1);
     setView("editor");
   }
