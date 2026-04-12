@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ContentList } from "./_components/content-list";
 import { TopBar } from "./_components/top-bar";
 import { EditorPanel } from "./_components/editor-panel";
@@ -125,6 +125,8 @@ export default function ComposerPage() {
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
+  const [previewRefreshKey, setPreviewRefreshKey] = useState(0);
+  const previewDebounceRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const fetchList = useCallback(async () => {
     setListLoading(true);
@@ -142,6 +144,50 @@ export default function ComposerPage() {
   useEffect(() => {
     fetchList();
   }, [fetchList]);
+
+  function getSlug(): string {
+    return (
+      editingSlug ||
+      slugify(frontmatter.title) + (language === "vi" ? "-vi" : "")
+    );
+  }
+
+  // Auto-refresh preview when editing with preview open
+  useEffect(() => {
+    if (!showPreview || !previewUrl || !frontmatter.title.trim()) return;
+
+    if (previewDebounceRef.current) {
+      clearTimeout(previewDebounceRef.current);
+    }
+
+    previewDebounceRef.current = setTimeout(async () => {
+      const slug = getSlug();
+      const content = buildMdxContent(contentType, language, frontmatter, markdown);
+
+      try {
+        await fetch("/api/composer/draft", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug,
+            collection: contentType,
+            content,
+            language,
+          }),
+        });
+        setPreviewRefreshKey((k) => k + 1);
+      } catch {
+        // Silently fail — preview will just show stale content
+      }
+    }, 800);
+
+    return () => {
+      if (previewDebounceRef.current) {
+        clearTimeout(previewDebounceRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [markdown, frontmatter, showPreview]);
 
   async function handleSelect(item: ContentItem) {
     const res = await fetch(
@@ -234,13 +280,6 @@ export default function ComposerPage() {
         `Preview failed: ${err instanceof Error ? err.message : "Unknown error"}`
       );
     }
-  }
-
-  function getSlug(): string {
-    return (
-      editingSlug ||
-      slugify(frontmatter.title) + (language === "vi" ? "-vi" : "")
-    );
   }
 
   async function handleSaveDraft() {
@@ -357,7 +396,9 @@ export default function ComposerPage() {
           collection={contentType}
           onChange={setMarkdown}
         />
-        {showPreview && previewUrl && <PreviewPanel previewUrl={previewUrl} />}
+        {showPreview && previewUrl && (
+          <PreviewPanel previewUrl={previewUrl} refreshKey={previewRefreshKey} />
+        )}
       </div>
 
       <FrontmatterBar

@@ -70,9 +70,23 @@ export function EditorPanel({
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden" style={{ background: "hsl(var(--background))" }}>
+      <style>{`
+        .milkdown-composer .ProseMirror {
+          font-family: 'Nunito', sans-serif;
+          line-height: 1.7;
+        }
+        .milkdown-composer .ProseMirror h1,
+        .milkdown-composer .ProseMirror h2,
+        .milkdown-composer .ProseMirror h3,
+        .milkdown-composer .ProseMirror h4,
+        .milkdown-composer .ProseMirror h5,
+        .milkdown-composer .ProseMirror h6 {
+          font-family: 'Fraunces', serif;
+        }
+      `}</style>
       <div
         ref={editorRef}
-        className="flex-1 overflow-auto"
+        className="milkdown-composer flex-1 overflow-auto"
       />
     </div>
   );
