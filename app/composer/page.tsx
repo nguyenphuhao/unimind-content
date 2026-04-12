@@ -107,7 +107,10 @@ function buildMdxContent(
     })
     .join("\n");
 
-  return `---\n${yamlLines}\n---\n\n${body}`;
+  // Strip h1 title from body — it's already in frontmatter
+  const cleanBody = body.replace(/^#\s+.+\n*/, "").trimStart();
+
+  return `---\n${yamlLines}\n---\n\n${cleanBody}`;
 }
 
 export default function ComposerPage() {
@@ -120,6 +123,16 @@ export default function ComposerPage() {
   const [language, setLanguage] = useState<Language>("en");
   const [frontmatter, setFrontmatter] = useState<FrontmatterData>(emptyFrontmatter());
   const [markdown, setMarkdown] = useState("");
+
+  function handleMarkdownChange(md: string) {
+    setMarkdown(md);
+    // Sync h1 → frontmatter title
+    const match = md.match(/^#\s+(.+)$/m);
+    const h1 = match ? match[1].trim() : "";
+    if (h1 !== frontmatter.title) {
+      setFrontmatter((prev) => ({ ...prev, title: h1 }));
+    }
+  }
   const [showPreview, setShowPreview] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -218,7 +231,11 @@ export default function ComposerPage() {
       description: (fm.description as string) || "",
       coverImage: (fm.coverImage as string) || "",
     });
-    setMarkdown(data.body);
+    // Prepend h1 title if body doesn't already start with one
+    const title = (fm.title as string) || "";
+    const body = data.body.trimStart();
+    const hasH1 = /^#\s+/.test(body);
+    setMarkdown(hasH1 ? body : `# ${title}\n\n${body}`);
     setEditorKey((k) => k + 1);
     setView("editor");
   }
@@ -397,7 +414,7 @@ export default function ComposerPage() {
           key={editorKey}
           initialValue={markdown}
           collection={contentType}
-          onChange={setMarkdown}
+          onChange={handleMarkdownChange}
         />
         {showPreview && previewUrl && (
           <PreviewPanel previewUrl={previewUrl} refreshKey={previewRefreshKey} />
