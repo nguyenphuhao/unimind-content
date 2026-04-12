@@ -256,6 +256,9 @@ export default function ComposerPage() {
     const content = buildMdxContent(contentType, language, frontmatter, markdown);
 
     try {
+      // Enable Draft Mode so draft content is visible in preview
+      await fetch("/api/draft/enable");
+
       const res = await fetch("/api/composer/draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
