@@ -8,6 +8,10 @@ import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { listener, listenerCtx } from "@milkdown/kit/plugin/listener";
 import { upload, uploadConfig, type Uploader } from "@milkdown/plugin-upload";
 
+import "@milkdown/kit/prose/view/style/prosemirror.css";
+import "@milkdown/kit/prose/gapcursor/style/gapcursor.css";
+import "@milkdown/kit/prose/tables/style/tables.css";
+
 interface EditorPanelProps {
   initialValue: string;
   collection: string;
@@ -87,10 +91,10 @@ export function EditorPanel({
   }, []);
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="flex-1 overflow-auto" style={{ background: "hsl(var(--background))" }}>
       <div
         ref={editorRef}
-        className="h-full p-4 prose prose-sm max-w-none"
+        className="h-full p-4 prose prose-sm max-w-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-full"
         style={{
           fontFamily: "'Nunito', sans-serif",
           color: "hsl(var(--foreground))",
