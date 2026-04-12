@@ -34,7 +34,7 @@ function listAllContent(): ContentListItem[] {
   const items: ContentListItem[] = [];
 
   for (const collection of COLLECTIONS) {
-    const dir = path.join(process.cwd(), COLLECTION_DIRS[collection]);
+    const dir = path.join(/*turbopackIgnore: true*/ process.cwd(), COLLECTION_DIRS[collection]);
     if (!fs.existsSync(dir)) continue;
 
     const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
@@ -62,7 +62,7 @@ function readContent(slug: string, collection: Collection) {
   const dir = COLLECTION_DIRS[collection];
   if (!dir) return null;
 
-  const filePath = path.join(process.cwd(), dir, `${slug}.mdx`);
+  const filePath = path.join(/*turbopackIgnore: true*/ process.cwd(), dir, `${slug}.mdx`);
   if (!fs.existsSync(filePath)) return null;
 
   const raw = fs.readFileSync(filePath, "utf-8");

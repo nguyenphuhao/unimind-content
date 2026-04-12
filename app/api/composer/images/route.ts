@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     .replace(/-+/g, "-");
   const filename = `${timestamp}-${safeName}`;
 
-  const dir = path.join(process.cwd(), "public", "images", collection);
+  const dir = path.join(/*turbopackIgnore: true*/ process.cwd(), "public", "images", collection);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }

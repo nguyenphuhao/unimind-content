@@ -6,7 +6,7 @@ import { commonmark } from "@milkdown/kit/preset/commonmark";
 import { history } from "@milkdown/kit/plugin/history";
 import { clipboard } from "@milkdown/kit/plugin/clipboard";
 import { listener, listenerCtx } from "@milkdown/kit/plugin/listener";
-import { upload, uploadConfig } from "@milkdown/plugin-upload";
+import { upload, uploadConfig, type Uploader } from "@milkdown/plugin-upload";
 
 interface EditorPanelProps {
   initialValue: string;
@@ -36,41 +36,36 @@ export function EditorPanel({
           onChange(markdown);
         });
 
+        const uploader: Uploader = async (files, schema) => {
+          const images: Array<{ src: string; alt: string }> = [];
+
+          for (const file of Array.from(files)) {
+            if (!file.type.startsWith("image/")) continue;
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("collection", collection);
+
+            const res = await fetch("/api/composer/images", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (res.ok) {
+              const { url } = (await res.json()) as { url: string };
+              images.push({ src: url, alt: file.name });
+            }
+          }
+
+          const imageNodeType = schema.nodes.image;
+          return images.map(({ src, alt }) =>
+            imageNodeType.create({ src, alt })
+          );
+        };
+
         ctx.update(uploadConfig.key, (prev) => ({
           ...prev,
-          uploader: async (files: FileList, schema: unknown) => {
-            const images: Array<{ src: string; alt: string }> = [];
-
-            for (const file of Array.from(files)) {
-              if (!file.type.startsWith("image/")) continue;
-
-              const formData = new FormData();
-              formData.append("file", file);
-              formData.append("collection", collection);
-
-              const res = await fetch("/api/composer/images", {
-                method: "POST",
-                body: formData,
-              });
-
-              if (res.ok) {
-                const { url } = (await res.json()) as { url: string };
-                images.push({ src: url, alt: file.name });
-              }
-            }
-
-            const imageSchema =
-              schema && typeof schema === "object" && "nodes" in schema
-                ? (schema as { nodes: { get: (name: string) => { create: (attrs: { src: string; alt: string }) => unknown } } })
-                : null;
-            const imageNodeType = imageSchema?.nodes?.get("image");
-
-            return images.map(({ src, alt }) =>
-              imageNodeType
-                ? imageNodeType.create({ src, alt })
-                : null
-            ).filter(Boolean);
-          },
+          uploader,
         }));
       })
       .use(commonmark)

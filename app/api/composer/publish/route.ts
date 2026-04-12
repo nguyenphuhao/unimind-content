@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   const filePath = path.join(dir, `${slug}.mdx`);
-  const fullPath = path.join(process.cwd(), filePath);
+  const fullPath = path.join(/*turbopackIgnore: true*/ process.cwd(), filePath);
 
   try {
     const dirPath = path.dirname(fullPath);
@@ -51,16 +51,16 @@ export async function POST(req: NextRequest) {
 
     const imageDir = `public/images/${collection}`;
     const gitAddPaths = [filePath];
-    if (fs.existsSync(path.join(process.cwd(), imageDir))) {
+    if (fs.existsSync(path.join(/*turbopackIgnore: true*/ process.cwd(), imageDir))) {
       gitAddPaths.push(imageDir);
     }
 
-    execSync(`git add ${gitAddPaths.join(" ")}`, { cwd: process.cwd() });
+    execSync(`git add ${gitAddPaths.join(" ")}`, { cwd: /*turbopackIgnore: true*/ process.cwd() });
     execSync(
       `git commit -m "content: ${title}"`,
-      { cwd: process.cwd() }
+      { cwd: /*turbopackIgnore: true*/ process.cwd() }
     );
-    execSync("git push origin main", { cwd: process.cwd() });
+    execSync("git push origin main", { cwd: /*turbopackIgnore: true*/ process.cwd() });
 
     return NextResponse.json({ success: true, path: filePath });
   } catch (err) {
