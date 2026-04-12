@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 interface ContentItem {
   slug: string;
   collection: string;
@@ -18,18 +20,56 @@ interface ContentListProps {
 }
 
 const statusColors: Record<string, { bg: string; text: string }> = {
-  published: { bg: "hsl(160 84% 39% / 0.1)", text: "hsl(160 84% 39%)" },
-  draft: { bg: "hsl(38 92% 50% / 0.1)", text: "hsl(38 92% 50%)" },
+  published: { bg: "hsl(160 84% 39% / 0.15)", text: "hsl(160 84% 39%)" },
+  draft: { bg: "hsl(38 92% 50% / 0.15)", text: "hsl(38 75% 40%)" },
 };
 
+const collectionColors: Record<string, { bg: string; text: string }> = {
+  Blog: { bg: "hsl(221 83% 53% / 0.12)", text: "hsl(221 83% 45%)" },
+  Wiki: { bg: "hsl(270 60% 55% / 0.12)", text: "hsl(270 60% 45%)" },
+  Handbook: { bg: "hsl(30 80% 50% / 0.12)", text: "hsl(30 80% 40%)" },
+  Page: { bg: "hsl(180 50% 45% / 0.12)", text: "hsl(180 50% 35%)" },
+};
+
+const localeColors: Record<string, { bg: string; text: string }> = {
+  en: { bg: "hsl(210 60% 50% / 0.12)", text: "hsl(210 60% 40%)" },
+  vi: { bg: "hsl(0 70% 55% / 0.12)", text: "hsl(0 70% 42%)" },
+};
+
+type FilterType = "all" | "posts" | "wiki" | "handbook" | "pages";
+type FilterLang = "all" | "en" | "vi";
+
+const FILTER_TYPES: { value: FilterType; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "posts", label: "Blog" },
+  { value: "wiki", label: "Wiki" },
+  { value: "handbook", label: "Handbook" },
+  { value: "pages", label: "Pages" },
+];
+
+const FILTER_LANGS: { value: FilterLang; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "en", label: "EN" },
+  { value: "vi", label: "VI" },
+];
+
 export function ContentList({ items, loading, onSelect, onNew }: ContentListProps) {
+  const [filterType, setFilterType] = useState<FilterType>("all");
+  const [filterLang, setFilterLang] = useState<FilterLang>("all");
+
+  const filtered = items.filter((item) => {
+    if (filterType !== "all" && item.collection !== filterType) return false;
+    if (filterLang !== "all" && item.locale !== filterLang) return false;
+    return true;
+  });
+
   return (
     <div
       className="min-h-screen px-6 py-12"
       style={{ background: "hsl(var(--background))" }}
     >
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h1
               className="text-3xl font-bold mb-1"
@@ -56,16 +96,64 @@ export function ContentList({ items, loading, onSelect, onNew }: ContentListProp
           </button>
         </div>
 
+        {/* Filters */}
+        <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-1">
+            {FILTER_TYPES.map((ft) => (
+              <button
+                key={ft.value}
+                onClick={() => setFilterType(ft.value)}
+                className="px-3 py-1 rounded-full text-xs font-medium transition-colors"
+                style={{
+                  background: filterType === ft.value ? "hsl(var(--foreground))" : "hsl(var(--muted))",
+                  color: filterType === ft.value ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
+                }}
+              >
+                {ft.label}
+              </button>
+            ))}
+          </div>
+          <div
+            className="w-px h-5"
+            style={{ background: "hsl(var(--border))" }}
+          />
+          <div className="flex items-center gap-1">
+            {FILTER_LANGS.map((fl) => (
+              <button
+                key={fl.value}
+                onClick={() => setFilterLang(fl.value)}
+                className="px-3 py-1 rounded-full text-xs font-medium transition-colors"
+                style={{
+                  background: filterLang === fl.value ? "hsl(var(--foreground))" : "hsl(var(--muted))",
+                  color: filterLang === fl.value ? "hsl(var(--background))" : "hsl(var(--muted-foreground))",
+                }}
+              >
+                {fl.label}
+              </button>
+            ))}
+          </div>
+          <span
+            className="text-xs ml-auto"
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
+            {filtered.length} item{filtered.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+
         {loading ? (
           <p style={{ color: "hsl(var(--muted-foreground))" }}>Loading...</p>
-        ) : items.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <p style={{ color: "hsl(var(--muted-foreground))" }}>
-            No content yet. Click &quot;+ New&quot; to create your first piece.
+            {items.length === 0
+              ? 'No content yet. Click "+ New" to create your first piece.'
+              : "No content matches the current filters."}
           </p>
         ) : (
           <div className="space-y-2">
-            {items.map((item) => {
-              const colors = statusColors[item.status] || statusColors.draft;
+            {filtered.map((item) => {
+              const sColors = statusColors[item.status] || statusColors.draft;
+              const cColors = collectionColors[item.collectionLabel] || collectionColors.Blog;
+              const lColors = localeColors[item.locale] || localeColors.en;
               return (
                 <button
                   key={`${item.collection}-${item.slug}`}
@@ -88,25 +176,19 @@ export function ContentList({ items, loading, onSelect, onNew }: ContentListProp
                   <div className="flex gap-2 shrink-0">
                     <span
                       className="px-2 py-0.5 rounded text-xs font-medium"
-                      style={{
-                        background: "hsl(var(--muted))",
-                        color: "hsl(var(--muted-foreground))",
-                      }}
+                      style={{ background: cColors.bg, color: cColors.text }}
                     >
                       {item.collectionLabel}
                     </span>
                     <span
                       className="px-2 py-0.5 rounded text-xs font-medium uppercase"
-                      style={{
-                        background: "hsl(var(--muted))",
-                        color: "hsl(var(--muted-foreground))",
-                      }}
+                      style={{ background: lColors.bg, color: lColors.text }}
                     >
                       {item.locale}
                     </span>
                     <span
                       className="px-2 py-0.5 rounded text-xs font-medium capitalize"
-                      style={{ background: colors.bg, color: colors.text }}
+                      style={{ background: sColors.bg, color: sColors.text }}
                     >
                       {item.status}
                     </span>
