@@ -17,10 +17,10 @@ export default async function HandbookPage({
   const entries = await getHandbookEntries(lang);
 
   const items = entries.map((entry) => ({
-    slug: entry.slug,
-    title: entry.entry.title,
-    group: entry.entry.section ?? undefined,
-    order: entry.entry.order ?? undefined,
+    slug: entry.slug as string,
+    title: entry.title as string,
+    group: (entry.section as string) ?? undefined,
+    order: (entry.order as number) ?? undefined,
   }));
 
   return (

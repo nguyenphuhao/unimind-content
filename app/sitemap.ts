@@ -20,21 +20,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const postPages: MetadataRoute.Sitemap = posts.map((p) => ({
     url: `${BASE_URL}/blog/${p.slug}`,
-    lastModified: p.entry.date ? new Date(p.entry.date) : undefined,
+    lastModified: p.date ? new Date(p.date) : undefined,
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
   const wikiPages: MetadataRoute.Sitemap = wiki.map((a) => ({
     url: `${BASE_URL}/wiki/${a.slug}`,
-    lastModified: a.entry.date ? new Date(a.entry.date) : undefined,
+    lastModified: a.date ? new Date(a.date) : undefined,
     changeFrequency: "monthly",
     priority: 0.6,
   }));
 
   const handbookPages: MetadataRoute.Sitemap = handbook.map((e) => ({
     url: `${BASE_URL}/handbook/${e.slug}`,
-    lastModified: e.entry.date ? new Date(e.entry.date) : undefined,
+    lastModified: e.date ? new Date(e.date) : undefined,
     changeFrequency: "monthly",
     priority: 0.5,
   }));

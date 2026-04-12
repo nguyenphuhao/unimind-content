@@ -17,11 +17,11 @@ export default async function BlogPage({
   const posts = await getPosts(lang);
 
   const items = posts.map((post) => ({
-    slug: post.slug,
-    title: post.entry.title,
-    meta: [post.entry.author, post.entry.date].filter(Boolean).join(" · "),
-    tags: (post.entry.tags as string[]) ?? undefined,
-    coverImage: (post.entry.coverImage as string | null | undefined) ?? null,
+    slug: post.slug as string,
+    title: post.title as string,
+    meta: [post.author, post.date].filter(Boolean).join(" · "),
+    tags: (post.tags as string[]) ?? undefined,
+    coverImage: (post.coverImage as string | null | undefined) ?? null,
   }));
 
   return (
